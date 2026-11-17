@@ -48,3 +48,19 @@ Decisiones de detalle tomadas durante el desarrollo, con su motivo. Las decision
 | Se añade al bot la herramienta `find_territory`. | El modelo no puede conocer las claves de 2,478 municipios, y varios comparten nombre. |
 | "Personal sin sueldo en establecimientos micro" sustituye a "informalidad en las unidades micro" en el contraargumento. | La informalidad por tamaño de unidad no está en las fuentes verificadas. No se presenta como informalidad. |
 | Los valores municipales se parten en un archivo con el total de sectores y 32 archivos por sector. | El total basta para pintar el mapa y hacer rankings nacionales; el desglose por sector solo se descarga cuando se pide. |
+
+## Fase 4 — Mapa estatal
+
+| Decisión | Motivo |
+|---|---|
+| El mapa se pinta con MapLibre sin mapa base: un GeoJSON, una capa de relleno y una de bordes. | Es lo único en pantalla; sin teselas no hay llamadas a terceros. El color por entidad es una expresión `match`, así que cambiar de indicador no recarga geometría. |
+| El worker de MapLibre se declara con `setWorkerUrl(new URL(…, import.meta.url))`. | MapLibre busca su worker junto a su propio archivo, pero el empaquetador le cambia el nombre y la petición daba 404: el mapa quedaba en blanco en desarrollo y en producción. |
+| El estado vive en la URL con `history.replaceState` y se lee una sola vez al cargar. | Es un export estático, sin servidor. Leerlo después de hidratar evita que el HTML del build discrepe de la URL. No se guarda historial por cada cambio. |
+| La clase incluye su umbral superior y los umbrales repetidos se fusionan. | En sectores donde casi todas las entidades valen 0 %, los cuantiles coinciden. Con la regla anterior el 0 % caía en la clase más oscura, que decía lo contrario de los datos. Ahora hay menos clases, no clases vacías. |
+| Paleta bivariada oscura: la clara con la claridad invertida (OKLab) en el rango 0.50-0.92. | Los tonos oscuros de la clara desaparecían contra el fondo oscuro. Peor pareja: ΔE 9.0 con daltonismo simulado y 10.4 con visión normal (la clara: 12.0 y 12.6); las nueve celdas superan 3:1 de contraste con el fondo. Es algo más débil que la clara, y la leyenda y la ficha no dependen solo del color. |
+| La leyenda y la ficha solo citan las fuentes del año en pantalla. | El catálogo marca con `years` el censo de cada año (2023 y 2018); mostrar el de 2019 junto a una cifra de 2023 sería una cita equivocada. |
+| La IED por habitante lleva su advertencia en el campo `warning` del catálogo, no solo en las limitaciones. | La especificación pide que se vea siempre con la cifra; así la ficha la muestra aparte y la cifra de la Ciudad de México sigue saliendo de los datos del mismo build. |
+| En móvil el selector, el mapa, la leyenda y la ficha se apilan; la ficha no es una hoja inferior desplegable. | Una hoja que se arrastra es una interacción más que construir y probar. La pila cabe en 390 px y deja ver el mapa; la hoja queda como mejora si hace falta. |
+| El formato de `missing` es `{motivo: [posiciones]}`, no `{posición: motivo}`. | Es como lo escribe el pipeline desde la fase 3: más corto cuando muchos territorios comparten motivo. La especificación se corrigió. |
+| Playwright usa el Chrome instalado (`channel: "chrome"`) y sus pruebas viven en `web/e2e/`. | Evita descargar un navegador. Vitest solo corre `lib/`. |
+| Shadcn/ui con la base Radix y el estilo `nova`, con los tokens de la especificación encima. | El estilo da la estructura de los componentes; colores, radio de 2 px y tipografía son los aprobados. Archivo se instala con `@fontsource-variable/archivo` en vez de `next/font/google`, para que el build no dependa de Google. |

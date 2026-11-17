@@ -14,7 +14,10 @@
       "!out",
       "!dist",
       "!build",
-      "!public/data"
+      "!public/data",
+      "!components/ui",
+      "!test-results",
+      "!playwright-report"
     ]
   },
   "formatter": {

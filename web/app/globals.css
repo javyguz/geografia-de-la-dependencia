@@ -1,1 +1,110 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/* The theme follows the visitor's system setting; there is no manual switch. */
+@custom-variant dark (@media (prefers-color-scheme: dark));
+
+@theme inline {
+  --font-sans: "Archivo Variable", system-ui, sans-serif;
+  --font-heading: var(--font-sans);
+  --color-canvas: var(--canvas);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  /* 2 px on controls and panels everywhere (docs/spec.md §5). */
+  --radius-sm: 2px;
+  --radius-md: 2px;
+  --radius-lg: 2px;
+  --radius-xl: 2px;
+  --radius-2xl: 2px;
+  --radius-3xl: 2px;
+  --radius-4xl: 2px;
+}
+
+/* Tokens from docs/spec.md §5. "accent" in the spec is the blue; shadcn's own
+   `accent` is only the hover background, so it takes the `panel` colour. */
+:root {
+  --background: #ffffff;
+  --canvas: #eef0f2;
+  --foreground: #1a1c1f;
+  --card: #ffffff;
+  --card-foreground: #1a1c1f;
+  --popover: #ffffff;
+  --popover-foreground: #1a1c1f;
+  --primary: #3a47a8;
+  --primary-foreground: #ffffff;
+  --secondary: #f4f5f6;
+  --secondary-foreground: #1a1c1f;
+  --muted: #f4f5f6;
+  --muted-foreground: #5c6066;
+  --accent: #f4f5f6;
+  --accent-foreground: #1a1c1f;
+  --destructive: #b3261e;
+  --border: #d9dcdf;
+  --input: #d9dcdf;
+  --ring: #3a47a8;
+  --radius: 2px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #161718;
+    --canvas: #0e0f10;
+    --foreground: #eceef0;
+    --card: #161718;
+    --card-foreground: #eceef0;
+    --popover: #1f2123;
+    --popover-foreground: #eceef0;
+    --primary: #a2b4f5;
+    --primary-foreground: #161718;
+    --secondary: #1f2123;
+    --secondary-foreground: #eceef0;
+    --muted: #1f2123;
+    --muted-foreground: #a4a9b0;
+    --accent: #1f2123;
+    --accent-foreground: #eceef0;
+    --destructive: #f2b8b5;
+    --border: #34373a;
+    --input: #34373a;
+    --ring: #a2b4f5;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-variant-numeric: tabular-nums;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      /* biome-ignore lint/complexity/noImportantStyles: must beat component-level durations */
+      animation-duration: 0.01ms !important;
+      /* biome-ignore lint/complexity/noImportantStyles: must beat component-level durations */
+      transition-duration: 0.01ms !important;
+    }
+  }
+}

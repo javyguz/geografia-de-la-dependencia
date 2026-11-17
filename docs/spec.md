@@ -2,7 +2,7 @@
 
 Resultado de la fase 2. Define qué indicadores tendrá la app, cómo son los archivos que produce el pipeline, qué herramientas usa el bot y cómo se ve la interfaz. Parte del [planteamiento](brief.md) y de las [fuentes verificadas](fuentes.md).
 
-**Estado:** pendiente de aprobación.
+**Estado:** aprobada. Los cambios hechos durante la implementación están en [decisiones.md](decisiones.md).
 
 ## 1. Alcance acordado
 
@@ -196,14 +196,14 @@ Formato por columnas: una lista de territorios y, por cada serie, un arreglo de 
     "sector": "total",
     "year": 2023,
     "values": [0.221, 0.312, null],
-    "missing": { "2": "confidential" }
+    "missing": { "confidential": [2] }
   }]
 }
 ```
 
 - `"00"` es el valor nacional y solo aparece en el archivo estatal.
 - Los porcentajes se guardan como proporción (0.312), no multiplicados por cien.
-- Todo `null` tiene su motivo en `missing`, con el índice del territorio como clave.
+- Todo `null` tiene su motivo en `missing`: cada motivo lista las posiciones de `values` que son nulas por esa causa.
 
 ### Lo que valida el pipeline antes de exportar
 
@@ -310,7 +310,7 @@ Comprobaciones hechas con el validador de paletas, simulando protanopia y deuter
 - Bivariada: la pareja de colores más parecida queda a una distancia de 12.0 con daltonismo y 12.6 con visión normal. Las cuatro bivariadas de uso común que medí quedan entre 2.2 y 6.5 con daltonismo.
 - Ninguna paleta depende solo del color: la leyenda resalta la clase del territorio señalado, la ficha da el valor en texto y existe la tabla alternativa.
 
-En el tema oscuro la secuencial se invierte (lo más alto es lo más claro) y el punto medio de la divergente pasa a `#383a3d`. La bivariada oscura se generará con el mismo procedimiento y se validará en la fase 4; es lo único de esta sección que no está medido.
+En el tema oscuro la secuencial se invierte (lo más alto es lo más claro) y el punto medio de la divergente pasa a `#383a3d`. La bivariada oscura es la clara con la claridad invertida en el rango 0.50-0.92 (OKLab): `#636362` `#6b7cbc` `#8aa8ff` / `#aa6532` `#b38d8d` `#cdc3ff` / `#e1791c` `#e9a466` `#ffddbf`, de condiciones bajas a altas. Peor pareja: 9.0 con daltonismo simulado y 10.4 con visión normal; todas superan 3:1 contra `canvas`.
 
 **Clasificación.** Cinco clases por cuantiles para la secuencial y terciles por eje para la bivariada, calculados sobre todos los territorios del nivel visible, de modo que los colores no cambian al moverse por el mapa. La divergente se usa para la diferencia frente al valor nacional.
 

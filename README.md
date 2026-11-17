@@ -2,7 +2,7 @@
 
 Mapa interactivo de México, a nivel estatal y municipal, que muestra con datos públicos cómo se distribuye en el territorio el peso del capital extranjero, quién se queda con el valor que se produce y si la integración exportadora mejora o no las condiciones de trabajo locales.
 
-> **Estado:** en construcción. Por ahora el repositorio contiene solo la base del proyecto; todavía no hay datos ni mapa.
+> **Estado:** en construcción. Ya existen el pipeline de datos y el mapa estatal con cuatro capas; faltan el nivel municipal, la comparación, la metodología y el asistente.
 
 ## Principios
 
@@ -49,7 +49,7 @@ Las mismas que ejecuta la integración continua en cada push.
 |---|---|---|
 | Formato y lint | `uv run ruff format --check` y `uv run ruff check` | `pnpm lint` |
 | Tipos | `uv run pyright` | `pnpm typecheck` |
-| Pruebas | `uv run python -m pytest` | `pnpm test` |
+| Pruebas | `uv run python -m pytest` | `pnpm test` y `pnpm test:e2e` (necesita Chrome) |
 | Build | | `pnpm build` |
 
 ## Fuentes y licencias

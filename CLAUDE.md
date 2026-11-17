@@ -54,7 +54,8 @@ Se ejecuta desde `web/`. Export estático (`output: "export"`): sin código de s
 | Formato y lint (escribe) | `pnpm format` |
 | Lint (comprueba) | `pnpm lint` |
 | Tipos | `pnpm typecheck` |
-| Pruebas | `pnpm test` |
+| Pruebas de `lib/` | `pnpm test` |
+| Pruebas en navegador | `pnpm test:e2e` (usa el Chrome instalado) |
 | Build | `pnpm build` |
 
 - TypeScript estricto, sin `any`. Biome para formato y lint. Vitest para las funciones puras de `lib/`.
