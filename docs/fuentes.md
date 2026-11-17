@@ -4,7 +4,7 @@ Resultado de la fase 1: qué ofrece realmente cada fuente candidata del [plantea
 
 - **Fecha de verificación:** 16 de noviembre de 2026.
 - **Método:** cada archivo marcado como *verificado* se descargó y se abrió; las variables, la cobertura y las notas se leyeron del propio archivo o de su diccionario de datos, no de descripciones de terceros.
-- **Estado:** pendiente de aprobación. No se construye interfaz ni pipeline hasta que se apruebe.
+- **Estado:** aprobado el 16 de noviembre de 2026. Las decisiones de la sección 3 quedaron resueltas y se recogen en la [especificación](spec.md).
 
 ## 1. Lo que cambia respecto al planteamiento
 
@@ -37,7 +37,9 @@ Cinco hallazgos obligan a ajustar el plan. Los demás supuestos se confirmaron.
 
 Las capas 3 y 4 se pueden construir completas a los dos niveles. Las capas 1 y 2 quedan a nivel estatal.
 
-## 3. Decisiones que necesito
+## 3. Decisiones que se plantearon
+
+Resultado: se aprobaron las propuestas 1, 3, 4 y 5. En la 2 se eligió la alternativa: la participación se calcula sobre las unidades grandes.
 
 1. **Capa 1 solo estatal.** Propongo que, al acercarse a nivel municipal, la capa 1 siga mostrando el valor de la entidad con una nota explícita de que el dato no se publica por municipio. La alternativa (el Laboratorio de Microdatos del INEGI) exige acceso presencial y no es reproducible, así que la descarto.
 2. **Denominador de la capa 1.** El tabulado solo cubre unidades grandes. Se puede calcular la participación sobre el total de unidades grandes o sobre el total de la economía censada. Propongo el segundo, porque responde a la pregunta de la capa, declarando que es una **cota inferior**: el capital extranjero en unidades no grandes no se mide. Cifras de referencia en la [sección 4.2](#42-censos-económicos-2024-participación-de-capital-extranjero).
@@ -63,7 +65,7 @@ Las capas 3 y 4 se pueden construir completas a los dos niveles. Las capas 1 y 2
   - Los estratos del archivo son rangos fijos de personal; no coinciden exactamente con la definición oficial de micro, pequeña, mediana y grande, que varía por sector.
   - El archivo nacional contiene solo totales nacionales; los municipios están en los archivos por entidad.
 
-**Serie histórica.** El mismo apartado de datos abiertos publica un "Comparativo 2019-2004 con base al clasificador SCIAN 2023" para los censos 2019, 2014, 2009 y 2004, nacional y por entidad. Existe y es la vía correcta para comparar en el tiempo; no he abierto esos archivos para confirmar que traen municipios. Los datos abiertos originales del censo 2019 también siguen disponibles (`ce2019_ags_csv.zip`).
+**Serie histórica.** El mismo apartado de datos abiertos publica un "Comparativo 2019-2004 con base al clasificador SCIAN 2023" para los censos 2019, 2014, 2009 y 2004, nacional y por entidad. Es la vía correcta para comparar en el tiempo. Abrí el de Aguascalientes para 2019 (`conjunto_de_datos_ce_ags_2019_csv.zip`): tiene la misma estructura que el de 2024, con municipios y estratos. Los datos abiertos originales del censo 2019 también siguen disponibles (`ce2019_ags_csv.zip`).
 
 ### 4.2 Censos Económicos 2024, participación de capital extranjero
 
@@ -103,7 +105,7 @@ Las unidades grandes son 6.0 % de los establecimientos, pero generan 85.4 % del 
 - Compras en el exterior de las unidades grandes, por entidad: `mdoexce24_01.xlsx`.
 - Participación de capital extranjero en las mil empresas más grandes: `milence24_03.xlsx`.
 
-**Censo 2019.** Existe el tabulado equivalente con datos de 2018 (`/programas/ce/2019/tabulados/capexce19_01.xlsx`, 66 MB), también para unidades grandes. Falta confirmar que la definición de "grande" es la misma en los dos censos antes de comparar.
+**Censo 2019.** Existe el tabulado equivalente con datos de 2018 (`/programas/ce/2019/tabulados/capexce19_01.xlsx`, 66 MB), también para unidades grandes. **No es comparable con el de 2024:** en 2019 una unidad era grande con ingresos de 50 millones de pesos o más, o con 50 personas ocupadas o más, entre otros criterios; en 2024 el umbral principal es de 100 millones.
 
 ### 4.3 Exportaciones por entidad federativa (INEGI)
 
