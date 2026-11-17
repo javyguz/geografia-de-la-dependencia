@@ -93,3 +93,19 @@ Decisiones de detalle tomadas durante el desarrollo, con su motivo. Las decision
 | El catálogo no lleva `generated_at`; se quitó del tipo y del ejemplo de la especificación. | El pipeline nunca lo escribió y la página lo habría mostrado vacío. Cada fuente ya lleva su fecha de descarga. |
 | La navegación son enlaces con `aria-current`; en móvil va en un menú. | Explorar, Comparar y Metodología son secciones, no opciones de un control. En 390 px no caben junto al título y la búsqueda. |
 
+## Fase 7 — Asistente
+
+| Decisión | Motivo |
+|---|---|
+| Modelo por defecto: Claude Haiku 5.5 (`anthropic/claude-haiku-5.5`, 0.10/0.50 USD por millón de tokens). Lista corta: Haiku, DeepSeek V4 Flash, Gemini 3.1 Flash Lite y Qwen 3.7 Flash. Elegidos el 2026-11-17 de la lista de OpenRouter entre los modelos baratos con *tool calling*. | Fue el más preciso en la evaluación: 11/12 y 12/12 en dos rondas, y su único fallo fue un falso positivo de la comprobación. DeepSeek (12/12 y 11/12) es más barato y queda como alternativa; Qwen falló dos veces (una respuesta vacía); Gemini sacó 12/12 cuando la cuenta tuvo saldo. |
+| GPT-6 Luna queda fuera de la lista. | OpenRouter limitó sus peticiones (429) incluso de una en una. Un visitante se encontraría el mismo error. |
+| Cada petición lleva `max_tokens: 1200`. | Sin límite, OpenRouter reserva saldo para el máximo del modelo (65,536 tokens en algunos) y rechaza las claves con un tope de gasto. Las respuestas son de pocas frases. |
+| Los esquemas de las herramientas enumeran los identificadores del catálogo (indicadores y sectores). | El modelo no puede pedir un indicador que no existe; si lo intenta, la herramienta responde con un error que lista los válidos. |
+| Un indicador que solo existe por entidad, preguntado para un municipio, devuelve el valor de la entidad con una nota que lo dice. | Es la misma regla que la ficha. El modelo tiene instrucciones de explicar la nota. |
+| Las herramientas que tocan municipios cargan antes sus archivos con la misma función que usa el mapa. | Los datos municipales se cargan bajo demanda; sin esto, una pregunta sobre un municipio fallaría si el lector no se había acercado al mapa. |
+| El mensaje de sistema incluye lo que el lector tiene en pantalla (capa, indicador, sector, año y territorio). | Permite responder «¿y en este estado?» sin adivinar. |
+| Las respuestas son texto plano: el modelo tiene instrucciones de no usar Markdown y la interfaz no lo interpreta. | Evita una dependencia para renderizar Markdown y el riesgo de mostrar HTML que venga del modelo. |
+| El chat usa las primitivas de chat de shadcn (`message`, `bubble`, `message-scroller`, `trace`). Añaden la dependencia `@shadcn/react`. | Son los componentes de chat del sistema de componentes que ya usa el proyecto; el desplazamiento del historial en *streaming* no se resuelve en veinte líneas. |
+| La evaluación (`pnpm eval:bot`) es una configuración aparte de Vitest que llama a OpenRouter con la clave de `.env`. Además de comprobar cada caso, exige que toda cifra con decimales o separador de miles de la respuesta aparezca en algún resultado de herramienta del mismo turno. | Las cifras esperadas se calculan con las propias herramientas, así que los casos siguen a los datos al reconstruirlos. La clave nunca llega al código ni al build: la app solo usa la que escribe cada visitante. |
+| En móvil el asistente ocupa la pantalla bajo la barra; abrirlo vuelve a Explorar y cierra el contraargumento. | En 390 px el mapa, los controles y la leyenda no dejaban sitio para la conversación. Nunca hay dos paneles a la vez. |
+

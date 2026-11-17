@@ -111,3 +111,72 @@ test("the methodology page describes every indicator of the catalog", async ({
   await expect(page.locator("article[id]:not([id^=fuente-])")).toHaveCount(20);
   await expect(page.locator("#labor_share")).toContainText("Fórmula");
 });
+
+/** OpenRouter's streamed replies, one per request: first a tool call, then the answer. */
+function openRouterReplies(answer: string) {
+  const sse = (chunks: object[]) =>
+    `${chunks.map((c) => `data: ${JSON.stringify(c)}\n\n`).join("")}data: [DONE]\n\n`;
+  return [
+    sse([
+      {
+        choices: [
+          {
+            delta: {
+              tool_calls: [
+                {
+                  index: 0,
+                  id: "call_1",
+                  function: {
+                    name: "get_value",
+                    arguments: '{"indicator":"labor_share","territory":"19"}',
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    ]),
+    sse([{ choices: [{ delta: { content: answer } }] }]),
+  ];
+}
+
+test("the assistant asks for a key and works without one", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Preguntar" }).click();
+  await expect(
+    page.getByText(/hace falta una clave de OpenRouter/),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Añadir mi clave" }).click();
+  await expect(
+    page.getByText(/no pasan por ningún servidor de este sitio/),
+  ).toBeVisible();
+});
+
+test("the assistant answers with a figure from a tool and shows the lookup", async ({
+  page,
+}) => {
+  const replies = openRouterReplies("En Nuevo León es 24.6 % (INEGI, 2023).");
+  const bodies: string[] = [];
+  await page.route("https://openrouter.ai/api/v1/chat/completions", (route) => {
+    bodies.push(route.request().postData() ?? "");
+    route.fulfill({
+      contentType: "text/event-stream",
+      body: replies[bodies.length - 1] ?? replies[1],
+    });
+  });
+  // A fake key: the request never leaves the browser, it is answered above.
+  await page.addInitScript(() =>
+    window.localStorage.setItem("geografia.openrouter-key", "sk-or-test"),
+  );
+  await page.goto("/");
+  await page.getByRole("button", { name: "Preguntar" }).click();
+  await page.getByLabel("Pregunta").fill("¿Cuánto es en Nuevo León?");
+  await page.getByRole("button", { name: "Enviar" }).click();
+  await expect(
+    page.getByText("Consultó Parte del valor agregado"),
+  ).toBeVisible();
+  await expect(page.getByText("En Nuevo León es 24.6 %")).toBeVisible();
+  // The second request carries the tool's result, computed in the browser.
+  expect(bodies[1]).toContain('\\"formatted\\":\\"24.6 %\\"');
+});

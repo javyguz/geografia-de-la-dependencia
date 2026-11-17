@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { ChatPanel } from "@/components/chat-panel";
 import { CompareView } from "@/components/compare-view";
 import { Controls } from "@/components/controls";
 import { CounterargumentPanel } from "@/components/counterargument-panel";
@@ -11,6 +12,7 @@ import { SiteHeader } from "@/components/site-header";
 import { TableDialog } from "@/components/table-dialog";
 import { TerritorySearch } from "@/components/territory-search";
 import { Button } from "@/components/ui/button";
+import type { ToolHost } from "@/lib/bot/execute";
 import { boundsByTerritory, MEXICO } from "@/lib/bounds";
 import {
   type Data,
@@ -44,7 +46,10 @@ export function Explorer() {
   const [tableOpen, setTableOpen] = useState(false);
   const [zoomedIn, setZoomedIn] = useState(false);
   const [focus, setFocus] = useState<FocusRequest | null>(null);
-  const requested = useRef(new Set<string>());
+  const [chatOpen, setChatOpen] = useState(false);
+  // The assistant's tools run outside React's render, so they read the data from here.
+  const dataRef = useRef<Data | null>(null);
+  const pending = useRef(new Map<string, Promise<void>>());
   const theme = useTheme();
   const palette = paletteFor(theme);
 
@@ -52,7 +57,13 @@ export function Explorer() {
   useEffect(() => {
     setState(parseState(window.location.search));
     setUrlRead(true);
-    loadData().then(setData, () => setFailed(true));
+    loadData().then(
+      (loaded) => {
+        dataRef.current = loaded;
+        setData(loaded);
+      },
+      () => setFailed(true),
+    );
   }, []);
 
   useEffect(() => {
@@ -92,46 +103,62 @@ export function Explorer() {
   const sector = resolved?.sector ?? "total";
   const wantsMunicipal = municipal && zoomedIn;
   // Municipal values are needed to paint municipalities, and to describe any municipality on screen.
-  const onScreen = [selected, ...(comparing ? compared : [])];
+  const visible = [selected, ...(comparing ? compared : [])];
   const needsMunicipal =
     wantsMunicipal ||
-    onScreen.some((id) => id !== null && levelOf(id) === "municipality");
+    visible.some((id) => id !== null && levelOf(id) === "municipality");
   const level: Level =
     data && wantsMunicipal && valuesOf(data, "municipality", sector)
       ? "municipality"
       : "state";
 
-  // Municipal files load the first time they are needed: geometry and totals together, then each sector once.
-  const hasMunicipalData = data?.municipal != null;
+  // Every change to the data goes through here, so the tools see it at once.
+  const commit = useCallback((change: (d: Data) => Data) => {
+    if (!dataRef.current) return;
+    dataRef.current = change(dataRef.current);
+    setData(dataRef.current);
+  }, []);
+
+  /** Loads the municipal totals and, for a sector, its file. Each file is requested once. */
+  const ensureMunicipal = useCallback(
+    async (wanted: string) => {
+      const once = (key: string, load: () => Promise<void>) => {
+        let promise = pending.current.get(key);
+        if (!promise) {
+          promise = load();
+          pending.current.set(key, promise);
+          // A failed download may be retried later.
+          promise.catch(() => pending.current.delete(key));
+        }
+        return promise;
+      };
+      await once("total", async () => {
+        const municipal = await loadMunicipalities();
+        commit((d) => ({ ...d, municipal }));
+      });
+      if (wanted === "total") return;
+      await once(wanted, async () => {
+        const file = await loadMunicipalSector(wanted);
+        commit((d) =>
+          d.municipal
+            ? {
+                ...d,
+                municipal: {
+                  ...d.municipal,
+                  sectors: new Map(d.municipal.sectors).set(wanted, file),
+                },
+              }
+            : d,
+        );
+      });
+    },
+    [commit],
+  );
+
   useEffect(() => {
-    if (!needsMunicipal) return;
-    const fail = () => setMunicipalFailed(true);
-    if (!hasMunicipalData) {
-      if (requested.current.has("total")) return;
-      requested.current.add("total");
-      loadMunicipalities().then(
-        (municipal) => setData((d) => d && { ...d, municipal }),
-        fail,
-      );
-    } else if (sector !== "total" && !requested.current.has(sector)) {
-      requested.current.add(sector);
-      loadMunicipalSector(sector).then(
-        (file) =>
-          setData((d) =>
-            d?.municipal
-              ? {
-                  ...d,
-                  municipal: {
-                    ...d.municipal,
-                    sectors: new Map(d.municipal.sectors).set(sector, file),
-                  },
-                }
-              : d,
-          ),
-        fail,
-      );
-    }
-  }, [needsMunicipal, hasMunicipalData, sector]);
+    if (needsMunicipal)
+      ensureMunicipal(sector).catch(() => setMunicipalFailed(true));
+  }, [needsMunicipal, sector, ensureMunicipal]);
 
   /** Frames the state of a territory, when there are municipalities to show in it. */
   const enter = useCallback(
@@ -149,6 +176,26 @@ export function Explorer() {
     entered.current = true;
     if (selected) enter(selected);
   }, [stateBounds, selected, enter]);
+
+  const host = useMemo<ToolHost>(
+    () => ({
+      data: () => dataRef.current as Data,
+      ensureMunicipal,
+      show: (view) => {
+        update(view);
+        // Like a click on the map: a place shown with municipal data is entered.
+        const indicator = dataRef.current?.catalog.indicators.find(
+          (i) => i.id === (view.indicator ?? view.indicator2),
+        );
+        const bounds = view.territory
+          ? stateBounds?.get(stateOf(view.territory))
+          : undefined;
+        if (bounds && indicator?.levels.includes("municipality"))
+          setFocus({ bounds });
+      },
+    }),
+    [ensureMunicipal, update, stateBounds],
+  );
 
   const switchMode = (mode: Mode) => {
     // Entering the compare view with nothing to compare starts from the selected place.
@@ -184,6 +231,13 @@ export function Explorer() {
     selected && level === "state" && levelOf(selected) === "municipality"
       ? stateOf(selected)
       : selected;
+  const sectorLabel =
+    data.catalog.sectors.find((s) => s.id === sector)?.name ?? sector;
+  const screen = `capa «${resolved.layer.question}», indicador «${resolved.indicator.name}» (${resolved.indicator.id}), sector «${sectorLabel}», año ${resolved.year}; ${
+    selected
+      ? `territorio seleccionado: ${data.territories.get(selected)?.name} (clave ${selected})`
+      : "sin territorio seleccionado"
+  }.`;
   const scope =
     level === "municipality"
       ? "Por municipio"
@@ -197,7 +251,24 @@ export function Explorer() {
 
   return (
     <div className="flex h-dvh flex-col">
-      <SiteHeader current={state.mode} onMode={switchMode}>
+      <SiteHeader
+        current={state.mode}
+        onMode={(mode) => {
+          if (mode === "compare") setChatOpen(false);
+          switchMode(mode);
+        }}
+      >
+        <Button
+          variant={chatOpen ? "secondary" : "outline"}
+          aria-pressed={chatOpen}
+          onClick={() => {
+            // The assistant sits beside the map, so it brings the reader back to it.
+            setChatOpen(!chatOpen);
+            update({ mode: "explore", counterargument: false });
+          }}
+        >
+          Preguntar
+        </Button>
         <TerritorySearch
           collapse
           territories={data.territories}
@@ -221,7 +292,10 @@ export function Explorer() {
             />
           </section>
         )}
-        <main className="relative flex min-h-0 flex-1 flex-col bg-canvas">
+        {/* On a phone the assistant needs the whole screen; what it puts on the map is there when it closes. */}
+        <main
+          className={`relative flex min-h-0 flex-1 flex-col bg-canvas ${chatOpen ? "max-md:hidden" : ""}`}
+        >
           {/* On small screens the controls, map and legend stack; from md up the
               controls and legend float over a full-bleed map. */}
           <div className="border-b bg-background p-2 md:absolute md:top-3 md:left-3 md:z-10 md:w-[420px] md:border md:p-3">
@@ -259,9 +333,10 @@ export function Explorer() {
               size="sm"
               aria-pressed={state.counterargument}
               className="absolute right-2 bottom-2 z-10 md:right-3 md:bottom-3"
-              onClick={() =>
-                update({ counterargument: !state.counterargument })
-              }
+              onClick={() => {
+                setChatOpen(false);
+                update({ counterargument: !state.counterargument });
+              }}
             >
               El contraargumento
             </Button>
@@ -279,10 +354,24 @@ export function Explorer() {
           </div>
         </main>
         <aside
-          aria-label={state.counterargument ? "El contraargumento" : "Ficha"}
-          className="max-h-[36%] shrink-0 overflow-y-auto border-t bg-background md:max-h-none md:w-[360px] md:border-t-0 md:border-l"
+          aria-label={
+            chatOpen
+              ? "Asistente"
+              : state.counterargument
+                ? "El contraargumento"
+                : "Ficha"
+          }
+          className={`flex shrink-0 flex-col border-t bg-background md:max-h-none md:w-[360px] md:border-t-0 md:border-l ${chatOpen ? "max-md:min-h-0 max-md:flex-1" : "max-h-[36%] overflow-y-auto"}`}
         >
-          {state.counterargument ? (
+          {/* Kept mounted while closed, so the conversation survives closing the panel. */}
+          <div className={chatOpen ? "flex min-h-0 flex-1 flex-col" : "hidden"}>
+            <ChatPanel
+              host={host}
+              onScreen={screen}
+              onClose={() => setChatOpen(false)}
+            />
+          </div>
+          {chatOpen ? null : state.counterargument ? (
             <CounterargumentPanel
               data={data}
               territory={selected}
