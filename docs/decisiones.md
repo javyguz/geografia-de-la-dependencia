@@ -113,3 +113,13 @@ Decisiones de detalle tomadas durante el desarrollo, con su motivo. Las decision
 | El diálogo de la clave avisa del cupo diario y de que los proveedores gratuitos pueden guardar las preguntas. | Es lo que el visitante necesita saber antes de usarlos. |
 | Las comprobaciones de cifras de la evaluación aceptan el número sin su unidad («24.6 por ciento» por «24.6 %»). | La cifra es la que importa; la regla anterior marcaba como error una respuesta correcta. |
 
+## Fase 8 — Recorrido
+
+| Decisión | Motivo |
+|---|---|
+| El recorrido vive en `web/content/tour.json`, con instrucciones en `web/content/README.md`. Cada paso guarda su vista como la parte de la URL desde el `?`. | Para preparar un paso basta con dejar el mapa como se quiere y copiar la dirección; no hace falta conocer los identificadores. |
+| Los seis pasos llevan texto provisional, marcado con `draft: true` y con la etiqueta «Texto provisional» en la app. El texto no lleva cifras. | El autor redactará el texto final. Una cifra escrita a mano quedaría desactualizada al reconstruir los datos y sin unidad, año ni fuente; si el paso selecciona un territorio, el panel muestra su valor con todo eso. |
+| Un paso restablece lo que no fija (sector, año, territorio) y, sin territorio, vuelve a encuadrar el país. | Así un paso no hereda el sector o el zoom del anterior. |
+| `pnpm test` valida cada paso: capa, indicador de esa capa, sector y territorio existentes, y al menos un párrafo. | Un error al editar el archivo se detecta antes de publicarlo. |
+| El panel del recorrido ocupa el lugar de la ficha; el último paso ofrece abrir el contraargumento. Se añade el parámetro `paso` a la URL. | Nunca hay dos paneles a la vez, y cada paso se puede compartir con un enlace. |
+

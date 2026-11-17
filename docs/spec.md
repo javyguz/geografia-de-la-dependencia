@@ -394,5 +394,6 @@ Móvil:
 | `cmp` | Territorios en comparación, separados por comas |
 | `modo` | `explorar` (por defecto), `comparar` o `recorrido` |
 | `panel` | `contraargumento` cuando ese panel ocupa el lugar de la ficha |
+| `paso` | Paso del recorrido, desde 1 |
 
 Los valores por defecto no se escriben en la URL.

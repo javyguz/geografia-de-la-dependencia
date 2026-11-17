@@ -11,6 +11,7 @@ import { type FocusRequest, MapView } from "@/components/map-view";
 import { SiteHeader } from "@/components/site-header";
 import { TableDialog } from "@/components/table-dialog";
 import { TerritorySearch } from "@/components/territory-search";
+import { TourPanel } from "@/components/tour-panel";
 import { Button } from "@/components/ui/button";
 import type { ToolHost } from "@/lib/bot/execute";
 import { boundsByTerritory, MEXICO } from "@/lib/bounds";
@@ -26,6 +27,7 @@ import {
   valuesOf,
 } from "@/lib/data";
 import { paletteFor } from "@/lib/palettes";
+import { STEPS, stepView } from "@/lib/tour";
 import {
   emptyState,
   MAX_COMPARED,
@@ -197,7 +199,25 @@ export function Explorer() {
     [ensureMunicipal, update, stateBounds],
   );
 
+  /** Shows a step of the tour: its view, framed on its place or on the whole country. */
+  const goToStep = (index: number) => {
+    const step = STEPS[index];
+    if (!step || !data) return;
+    const view = stepView(step, index);
+    setChatOpen(false);
+    update(view);
+    const next = resolve(data, { ...emptyState(), ...view });
+    const bounds = view.territory
+      ? stateBounds?.get(stateOf(view.territory))
+      : undefined;
+    setFocus({ bounds: bounds && hasMunicipalities(next) ? bounds : MEXICO });
+  };
+
   const switchMode = (mode: Mode) => {
+    if (mode === "tour") {
+      goToStep(0);
+      return;
+    }
     // Entering the compare view with nothing to compare starts from the selected place.
     const seed = compared.length === 0 && selected ? [selected] : compared;
     update({ mode, compare: mode === "compare" ? seed : compared });
@@ -357,9 +377,11 @@ export function Explorer() {
           aria-label={
             chatOpen
               ? "Asistente"
-              : state.counterargument
-                ? "El contraargumento"
-                : "Ficha"
+              : state.mode === "tour"
+                ? "Recorrido"
+                : state.counterargument
+                  ? "El contraargumento"
+                  : "Ficha"
           }
           className={`flex shrink-0 flex-col border-t bg-background md:max-h-none md:w-[360px] md:border-t-0 md:border-l ${chatOpen ? "max-md:min-h-0 max-md:flex-1" : "max-h-[36%] overflow-y-auto"}`}
         >
@@ -371,7 +393,19 @@ export function Explorer() {
               onClose={() => setChatOpen(false)}
             />
           </div>
-          {chatOpen ? null : state.counterargument ? (
+          {chatOpen ? null : state.mode === "tour" ? (
+            <TourPanel
+              data={data}
+              resolved={resolved}
+              step={state.step}
+              territory={selected}
+              onStep={goToStep}
+              onExit={() => update({ mode: "explore" })}
+              onCounterargument={() =>
+                update({ mode: "explore", counterargument: true })
+              }
+            />
+          ) : state.counterargument ? (
             <CounterargumentPanel
               data={data}
               territory={selected}

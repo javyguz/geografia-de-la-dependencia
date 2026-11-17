@@ -23,6 +23,7 @@ interface Item {
 const ITEMS: Item[] = [
   { page: "explore", label: "Explorar", href: "/" },
   { page: "compare", label: "Comparar", href: "/?modo=comparar" },
+  { page: "tour", label: "Recorrido", href: "/?modo=recorrido" },
   { page: "methodology", label: "Metodología", href: "/metodologia" },
 ];
 

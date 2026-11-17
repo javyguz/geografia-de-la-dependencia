@@ -2,7 +2,7 @@
 
 Mapa interactivo de México, a nivel estatal y municipal, que muestra con datos públicos cómo se distribuye en el territorio el peso del capital extranjero, quién se queda con el valor que se produce y si la integración exportadora mejora o no las condiciones de trabajo locales.
 
-> **Estado:** en construcción. Ya existen el pipeline de datos, el mapa con cuatro capas por entidad y por municipio, la comparación, el contraargumento, la metodología y el asistente; falta el recorrido.
+> **Estado:** en construcción. Ya existen el pipeline de datos, el mapa con cuatro capas por entidad y por municipio, la comparación, el contraargumento, la metodología, el asistente y el recorrido (con texto provisional, que se edita en `web/content/tour.json`); falta el pulido y el despliegue.
 
 ## Principios
 

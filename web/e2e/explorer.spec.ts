@@ -180,3 +180,19 @@ test("the assistant answers with a figure from a tool and shows the lookup", asy
   // The second request carries the tool's result, computed in the browser.
   expect(bodies[1]).toContain('\\"formatted\\":\\"24.6 %\\"');
 });
+
+test("the tour walks through its steps and keeps its place in the URL", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Recorrido" }).first().click();
+  const tour = page.getByRole("region", { name: "Recorrido" });
+  await expect(tour.getByText("Recorrido, paso 1 de")).toBeVisible();
+  for (let i = 0; i < 3; i += 1)
+    await tour.getByRole("button", { name: "Siguiente" }).click();
+  await expect(page).toHaveURL(/[?&]paso=4/);
+  await expect(page).toHaveURL(/[?&]t=19/);
+  await expect(tour.getByText("Nuevo León", { exact: true })).toBeVisible();
+  await page.reload();
+  await expect(tour.getByText("Recorrido, paso 4 de")).toBeVisible();
+});
