@@ -16,9 +16,11 @@ export interface ViewState {
   compare: string[];
   /** The counterargument panel takes the place of the detail panel. */
   counterargument: boolean;
+  /** Step of the tour, from 0; shown from 1 in the URL. */
+  step: number;
 }
 
-export type Mode = "explore" | "compare";
+export type Mode = "explore" | "compare" | "tour";
 
 export const DEFAULT_LAYER = "foreign_capital";
 export const MAX_COMPARED = 3;
@@ -26,6 +28,7 @@ export const MAX_COMPARED = 3;
 const MODES: Record<Mode, string> = {
   explore: "explorar",
   compare: "comparar",
+  tour: "recorrido",
 };
 const COUNTERARGUMENT = "contraargumento";
 const CVEGEO = /^(\d{2}|\d{5})$/;
@@ -40,6 +43,7 @@ const PARAMS = {
   mode: "modo",
   compare: "cmp",
   panel: "panel",
+  step: "paso",
 } as const;
 
 export function emptyState(): ViewState {
@@ -53,12 +57,14 @@ export function emptyState(): ViewState {
     mode: "explore",
     compare: [],
     counterargument: false,
+    step: 0,
   };
 }
 
 export function parseState(search: string): ViewState {
   const params = new URLSearchParams(search);
   const year = Number(params.get(PARAMS.year));
+  const step = Math.trunc(Number(params.get(PARAMS.step))) || 0;
   return {
     layer: params.get(PARAMS.layer) ?? DEFAULT_LAYER,
     indicator: params.get(PARAMS.indicator),
@@ -66,7 +72,10 @@ export function parseState(search: string): ViewState {
     sector: params.get(PARAMS.sector) ?? "total",
     year: Number.isInteger(year) && year > 0 ? year : null,
     territory: params.get(PARAMS.territory),
-    mode: params.get(PARAMS.mode) === MODES.compare ? "compare" : "explore",
+    mode:
+      (Object.keys(MODES) as Mode[]).find(
+        (m) => MODES[m] === params.get(PARAMS.mode),
+      ) ?? "explore",
     compare: [
       ...new Set(
         (params.get(PARAMS.compare) ?? "")
@@ -75,6 +84,7 @@ export function parseState(search: string): ViewState {
       ),
     ].slice(0, MAX_COMPARED),
     counterargument: params.get(PARAMS.panel) === COUNTERARGUMENT,
+    step: step > 0 ? step - 1 : 0,
   };
 }
 
@@ -89,6 +99,8 @@ export function serializeState(state: ViewState): string {
   if (state.mode !== "explore") params.set(PARAMS.mode, MODES[state.mode]);
   if (state.compare.length) params.set(PARAMS.compare, state.compare.join(","));
   if (state.counterargument) params.set(PARAMS.panel, COUNTERARGUMENT);
+  if (state.mode === "tour" && state.step > 0)
+    params.set(PARAMS.step, String(state.step + 1));
   const text = params.toString();
   // Commas are legal in a query; leaving them plain keeps shared links readable.
   return text ? `?${text.replaceAll("%2C", ",")}` : "";

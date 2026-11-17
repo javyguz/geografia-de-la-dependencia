@@ -1,0 +1,40 @@
+{
+  "steps": [
+    {
+      "title": "Dónde pesa el capital extranjero",
+      "draft": true,
+      "view": "",
+      "text": "Este mapa muestra, para cada entidad, qué parte del valor agregado de las unidades económicas grandes corresponde a las que declaran tener capital extranjero.\n\nLa leyenda indica qué tono corresponde a cada rango. Haz clic en una entidad para ver su valor, su puesto y el valor nacional."
+    },
+    {
+      "title": "La manufactura",
+      "draft": true,
+      "view": "?sector=31-33",
+      "text": "El mismo indicador, solo para la industria manufacturera. Compáralo con el mapa anterior: el peso del capital extranjero cambia según el sector.\n\nLas entidades con trama no tienen dato publicado o el INEGI lo mantiene confidencial."
+    },
+    {
+      "title": "¿Derrama o enclave?",
+      "draft": true,
+      "view": "?capa=spillover",
+      "text": "Este mapa cruza dos ejes: la integración externa de cada entidad y las condiciones de trabajo de su población.\n\nCada color corresponde a una combinación de los dos ejes; la cuadrícula de la leyenda dice cuál."
+    },
+    {
+      "title": "¿Quién se queda con el valor?",
+      "draft": true,
+      "view": "?capa=value_split&t=19",
+      "text": "De cada peso de valor agregado, la parte que se paga en remuneraciones. Al acercarse, el mapa pasa de entidades a municipios.\n\nAbajo aparece el valor de Nuevo León junto al nacional."
+    },
+    {
+      "title": "Bajar al municipio",
+      "draft": true,
+      "view": "?capa=employment&ind=micro_establishment_employment_share&t=20",
+      "text": "El empleo en establecimientos de hasta 10 personas, por municipio, en Oaxaca.\n\nLos municipios con trama son los que el censo no pudo captar o cuyo dato es confidencial."
+    },
+    {
+      "title": "El contraargumento",
+      "draft": true,
+      "view": "?capa=value_split&ind=wage_per_paid_worker",
+      "text": "Hay datos que pueden contradecir la tesis de este mapa. El panel del contraargumento compara las unidades grandes con y sin capital extranjero, con el mismo método y las mismas fuentes.\n\nÁbrelo desde aquí o desde el botón que siempre está sobre el mapa."
+    }
+  ]
+}

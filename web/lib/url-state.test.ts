@@ -22,6 +22,7 @@ describe("url state", () => {
       mode: "compare" as const,
       compare: ["08037", "19039"],
       counterargument: true,
+      step: 0,
     };
     expect(parseState(serializeState(state))).toEqual(state);
   });
@@ -42,6 +43,15 @@ describe("url state", () => {
   it("writes the compare list with plain commas", () => {
     const state = { ...emptyState(), compare: ["08", "19"] };
     expect(serializeState(state)).toBe("?cmp=08,19");
+  });
+
+  it("writes the tour step from 1 and reads it back from 0", () => {
+    const state = { ...emptyState(), mode: "tour" as const, step: 2 };
+    expect(serializeState(state)).toBe("?modo=recorrido&paso=3");
+    expect(parseState("?modo=recorrido&paso=3")).toMatchObject({
+      mode: "tour",
+      step: 2,
+    });
   });
 
   it("ignores a year that is not a number", () => {
