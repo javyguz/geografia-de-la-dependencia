@@ -32,6 +32,7 @@ Se ejecuta desde `pipeline/`. Nunca pip, poetry ni conda.
 | Tarea | Comando |
 |---|---|
 | Generar todos los artefactos | `uv run pipeline build` |
+| Solo descargar las fuentes | `uv run pipeline fetch` (`--refresh` para fijar versiones nuevas) |
 | Formato | `uv run ruff format` |
 | Lint | `uv run ruff check` |
 | Tipos | `uv run pyright` |
@@ -39,7 +40,9 @@ Se ejecuta desde `pipeline/`. Nunca pip, poetry ni conda.
 | Añadir una dependencia | `uv add <paquete>` |
 
 - `fetch/` descarga los datos crudos (en caché, con checksum, fuera del repositorio). `transform/` contiene funciones pequeñas y puras. `build/` valida contra `schemas.py` y exporta.
-- Tipado completo, pyright en modo estricto. Polars para tablas; GeoPandas solo donde haga falta geometría.
+- Tipado completo, pyright en modo estricto. Polars para tablas; GeoPandas solo donde haga falta geometría (`transform/geometry.py`, el único módulo con la comprobación de tipos relajada).
+- Los textos de indicadores, fuentes y sectores viven en `pipeline/src/pipeline/catalog.toml`; `catalog.json` se genera desde ahí. No se edita `web/public/data/` a mano.
+- Todo valor que falta lleva un motivo (`confidential`, `not_published`, `not_collected`, `not_computable`, `no_population`). Nunca se imputa.
 
 ## web/ (Next.js, pnpm)
 

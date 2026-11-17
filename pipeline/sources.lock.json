@@ -1,0 +1,372 @@
+{
+  "2026_2T_Flujos_EF_AC_5.xlsx": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "72235fbd4aaee146e73d9d5c1adfd853c1887d4514baa5b9af66ae992793b718",
+    "url": "https://www.gob.mx/cms/uploads/attachment/file/1100602/2026_2T_Flujos_EF_AC_5.xlsx"
+  },
+  "EAEF_Entidad.xlsx": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "96f0d116cad4e1e15e86ac3ebf4534c292d3b088c81c9e2274c0dafc45bf47d5",
+    "url": "https://www.inegi.org.mx/contenidos/programas/exporta_ef/tabulados/EAEF_Entidad.xlsx"
+  },
+  "capexce24_01.xlsx": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "bb1e8a27dc8cb2124c8298f795748f57b51b405a911873f1538720f0c322f5fa",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/tabulados/capexce24_01.xlsx"
+  },
+  "conjunto_de_datos_ce_ags_2019_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "0c26e7ecf35cbd5cd8f3fda01759a7449c5443894cae7123bc170fd2d68681b6",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_ags_2019_csv.zip"
+  },
+  "conjunto_de_datos_ce_ags_2024_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "7563cc0ff04dfe85b967f63092d8ef57592f5fed8b8efa132a85124a48569b9a",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_ags_2024_csv.zip"
+  },
+  "conjunto_de_datos_ce_bc_2019_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "703d020086c349bac24e5f8f4279cf2504a58eb43827c0b1f33fb0a8dfdfdd67",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_bc_2019_csv.zip"
+  },
+  "conjunto_de_datos_ce_bc_2024_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "6c34380fe8b933c57e7a9715d719cea35ac579bd58b5d8d4a0eb2f5a035dd0f3",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_bc_2024_csv.zip"
+  },
+  "conjunto_de_datos_ce_bcs_2019_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "d135122192aee786ae66e09334f868cfb33a566be0d282ca4cc934b1047cdbae",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_bcs_2019_csv.zip"
+  },
+  "conjunto_de_datos_ce_bcs_2024_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "2eda8d1e7556556e0cfb4243069547be9c317957f9d8c1ba31536bb59eb0dd9d",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_bcs_2024_csv.zip"
+  },
+  "conjunto_de_datos_ce_camp_2019_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "6a5c92b87c411b0856cf4dfeca89e465e559e75c58e8efdcd5eb2f547684ae72",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_camp_2019_csv.zip"
+  },
+  "conjunto_de_datos_ce_camp_2024_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "bf623803f47447182e90fefdae5fc704e032ad33a3f36dfb357dde66221103ba",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_camp_2024_csv.zip"
+  },
+  "conjunto_de_datos_ce_cdmx_2019_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "202772567a0e08c7ef00bac306bfffc58b2e3184c140143b004be6293410377e",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_cdmx_2019_csv.zip"
+  },
+  "conjunto_de_datos_ce_cdmx_2024_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "50946acb75a62ae49d5ca15d7a56fb2886abfc4269a5304eca4235bb22d40af3",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_cdmx_2024_csv.zip"
+  },
+  "conjunto_de_datos_ce_chih_2019_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "b5adf5a503aa7f72089b8c070cec84ed003dcfdab901ec77d2bc769ddb03b9c6",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_chih_2019_csv.zip"
+  },
+  "conjunto_de_datos_ce_chih_2024_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "a23b926cd738822ad682c22973274c3c8d10821735c6b20473d36c2807612202",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_chih_2024_csv.zip"
+  },
+  "conjunto_de_datos_ce_chis_2019_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "8ef4799c3e0695e667386764179592c35a81ce8c9507614d55a95b894a8276b4",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_chis_2019_csv.zip"
+  },
+  "conjunto_de_datos_ce_chis_2024_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "dcef49962b72249311eb4776d9ba98b5bc91038e3e8600a80e60bce87a3da013",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_chis_2024_csv.zip"
+  },
+  "conjunto_de_datos_ce_coah_2019_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "96a5935630e18007e5e6fbdecde411ece2d5b0b5136d21317c7e6800e36bd2e4",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_coah_2019_csv.zip"
+  },
+  "conjunto_de_datos_ce_coah_2024_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "7dbcb00a7b86c787f4eef383290d1ce2b0437cb3a2a2798553040f01fa7ddff3",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_coah_2024_csv.zip"
+  },
+  "conjunto_de_datos_ce_col_2019_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "0d3b6928b94a9461fd0545e8566d85ed25a250271a81ff937ba62792fa99236d",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_col_2019_csv.zip"
+  },
+  "conjunto_de_datos_ce_col_2024_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "b8ac9f8fa979742ea82c5ad3ae9b9cae166ac010fe5c2e1b626d40e3ea7223bd",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_col_2024_csv.zip"
+  },
+  "conjunto_de_datos_ce_dgo_2019_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "922c786f8b513f5c453b1f36248f1117ab6dcb14490321528597972a7fb70329",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_dgo_2019_csv.zip"
+  },
+  "conjunto_de_datos_ce_dgo_2024_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "1d73565cae333fec8b21b1cdeaeab929e91826e70bee4841a94a78b6df99f449",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_dgo_2024_csv.zip"
+  },
+  "conjunto_de_datos_ce_gro_2019_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "02d07289a9d8639b4e0027d5fc743e9026fb8108656ef7c433770f45343826f4",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_gro_2019_csv.zip"
+  },
+  "conjunto_de_datos_ce_gro_2024_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "c8e3d2ed4f35f56ee24b8010d2228474ec3697c949ffa78fac0dcb3552feb0fb",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_gro_2024_csv.zip"
+  },
+  "conjunto_de_datos_ce_gto_2019_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "a73b476048ce48da590a608406399f9955d652f1f398a855f275c82db0f05906",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_gto_2019_csv.zip"
+  },
+  "conjunto_de_datos_ce_gto_2024_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "0419ffd3c2531bc8ea2a0ab4769ac116b4f763ae31b69abd1a8b23b6b6ff4742",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_gto_2024_csv.zip"
+  },
+  "conjunto_de_datos_ce_hgo_2019_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "61504a1cd08c2204ece72b24d8e27028b2ebb1d30e80b75ad50c26b409f81ea5",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_hgo_2019_csv.zip"
+  },
+  "conjunto_de_datos_ce_hgo_2024_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "b58ccc6de5dc1026d3689ddf45dff4506a0d0093777c069f2d5ef8e53a63d551",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_hgo_2024_csv.zip"
+  },
+  "conjunto_de_datos_ce_jal_2019_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "17731fbbfd76c573272377de3e62a76f489cf0c35bd3fed66939f4dd5e2abf0a",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_jal_2019_csv.zip"
+  },
+  "conjunto_de_datos_ce_jal_2024_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "d37b795a8017e9027cd072dd41cfe314a7ddfd6d9f98e4d3fdda08f514d59fc3",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_jal_2024_csv.zip"
+  },
+  "conjunto_de_datos_ce_mex_2019_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "8d46fdffb7c7e91df340014af86e23fce67e551d6c5f7b57167e07769d0c99d5",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_mex_2019_csv.zip"
+  },
+  "conjunto_de_datos_ce_mex_2024_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "10f5655e52d0a277fe6b1b5804d509fe89a87794a5c80e5f5bbbfb598f6f520d",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_mex_2024_csv.zip"
+  },
+  "conjunto_de_datos_ce_mich_2019_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "37ab727569e779bc109f034c0af28b5c5db8d13328fcb46ee975ed149a7e7ceb",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_mich_2019_csv.zip"
+  },
+  "conjunto_de_datos_ce_mich_2024_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "22d3b3883df81ec6d4e27d2fc5ea300520fa96084e9f982fc93881bc7d911bd3",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_mich_2024_csv.zip"
+  },
+  "conjunto_de_datos_ce_mor_2019_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "2e458399a0c8851da30d59d0186197fe00c5df51453a768899eba90377bef3fe",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_mor_2019_csv.zip"
+  },
+  "conjunto_de_datos_ce_mor_2024_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "eb53ef78de30e282601e7ce4487c05a6dafcdc7bf55233f88ca53c6747975998",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_mor_2024_csv.zip"
+  },
+  "conjunto_de_datos_ce_nac_2019_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "c5688d9730d36b095cd7437c992c686bd7fa2d1fda4c71ef91fd28b513144a91",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_nac_2019_csv.zip"
+  },
+  "conjunto_de_datos_ce_nac_2024_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "f38b2b476b6157c8c53991e04684be870d0ac8d50c2d34d61e43cb663f892aae",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_nac_2024_csv.zip"
+  },
+  "conjunto_de_datos_ce_nay_2019_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "293ca544e526295ed4ac271c68bd20a5f152382e53a292b82f7ee0c86bb21aa0",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_nay_2019_csv.zip"
+  },
+  "conjunto_de_datos_ce_nay_2024_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "843afad52062b99fef848aad9c05e93c88ceff29cb44c7ac66eb9f027860b43f",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_nay_2024_csv.zip"
+  },
+  "conjunto_de_datos_ce_nl_2019_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "4651349ff4e02261bcf5acd9dc4b2b64bcc59a100eb2db227ab6d91e6b8d3a86",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_nl_2019_csv.zip"
+  },
+  "conjunto_de_datos_ce_nl_2024_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "62d26ad06102af216ab57b4a48ada5099384156a89decc849ebdfa4b0f959676",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_nl_2024_csv.zip"
+  },
+  "conjunto_de_datos_ce_oax_2019_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "b73f06bbc1454d3eeb54ad8f74915fc6c4e80418d1b9538742605283b7be908c",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_oax_2019_csv.zip"
+  },
+  "conjunto_de_datos_ce_oax_2024_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "cc51c751e6a114409c524d99ef0b6fe1d46ba3810248087b4e733cc62b0e1c35",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_oax_2024_csv.zip"
+  },
+  "conjunto_de_datos_ce_pue_2019_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "edbecda45997138ca996d027c8da8283ca79586d00210abb90f82348cd30ae3c",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_pue_2019_csv.zip"
+  },
+  "conjunto_de_datos_ce_pue_2024_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "63f3d32c6c69b224ae7e6424903fd1d252346a0297343c05eb8c32073db0c7aa",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_pue_2024_csv.zip"
+  },
+  "conjunto_de_datos_ce_qro_2019_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "675d4e4045e8838add8e237fe2f7682a998597c27d740aed2255ddbfdde91a1f",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_qro_2019_csv.zip"
+  },
+  "conjunto_de_datos_ce_qro_2024_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "155d74936f3b450d0a538e146977d055f91400d929a4b596ea809121c2123e2e",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_qro_2024_csv.zip"
+  },
+  "conjunto_de_datos_ce_qroo_2019_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "99c2b85e0da94a197ea969834816b606b3e326f00c48a67f3f1b83c29b282b65",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_qroo_2019_csv.zip"
+  },
+  "conjunto_de_datos_ce_qroo_2024_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "00d311431252a125526e6a3080ea25c017eebbecff38a0751b850b1556843b14",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_qroo_2024_csv.zip"
+  },
+  "conjunto_de_datos_ce_sin_2019_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "bcc40d562a145916993434609cd73ac0ec6294e4957ee5826ed997318f116433",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_sin_2019_csv.zip"
+  },
+  "conjunto_de_datos_ce_sin_2024_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "d76ca66691eb175a62ee53d73568c9a6b296b49ece6d3554173a403dc9e856f7",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_sin_2024_csv.zip"
+  },
+  "conjunto_de_datos_ce_slp_2019_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "49bb09d0b41bd4d208c589621553ee6484e91080afd5efe29230849edff3e1f2",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_slp_2019_csv.zip"
+  },
+  "conjunto_de_datos_ce_slp_2024_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "dcef33d36783fb3252dc3235528a59aaa8313eac6e5ae508f97c43cc1f24189e",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_slp_2024_csv.zip"
+  },
+  "conjunto_de_datos_ce_son_2019_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "88258013e79026e7a9ba0844e639e1fc9f3474f1e5c36b7d90b263ac3b0aceda",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_son_2019_csv.zip"
+  },
+  "conjunto_de_datos_ce_son_2024_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "6e4c0a61eb7b87b31e1b76bb6aa43c9eee6f875990547a0ebeb1ebcefc4a8997",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_son_2024_csv.zip"
+  },
+  "conjunto_de_datos_ce_tab_2019_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "6ae882664a9782bc649e41a2822f39971cec397d1e35765d957e52a1b45e9774",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_tab_2019_csv.zip"
+  },
+  "conjunto_de_datos_ce_tab_2024_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "a0c223dbd2a61ed84c76bf34d9d9964155b1e2765727d85776f3e8fb995f0806",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_tab_2024_csv.zip"
+  },
+  "conjunto_de_datos_ce_tamps_2019_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "7d0aaa1f6512767b0825b7fa4497255901c35e5d133c36fb0cb935da8aa5fef6",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_tamps_2019_csv.zip"
+  },
+  "conjunto_de_datos_ce_tamps_2024_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "f6ae9ce8f6bd76bcb7fabe1dfb8c85c6187c5dd3ed8455ad9b28d259f9664ce2",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_tamps_2024_csv.zip"
+  },
+  "conjunto_de_datos_ce_tlax_2019_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "0537ef4ccb88b1e629c7923aa7b75782e334f457a9787ff4ebff91a7eaed1aa8",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_tlax_2019_csv.zip"
+  },
+  "conjunto_de_datos_ce_tlax_2024_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "84f14ea690b49f9fb09bb07f1b04adf5e08170b37d62d62654d0ad02fec9fc7e",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_tlax_2024_csv.zip"
+  },
+  "conjunto_de_datos_ce_ver_2019_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "087a1c2f9e2845a1751d6175af9b7e09cd476a9ea410a7b14cc062dc8fd7fad4",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_ver_2019_csv.zip"
+  },
+  "conjunto_de_datos_ce_ver_2024_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "d183100c84510010fa1616139c85b13f7919820c63847603438f6509bbac1980",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_ver_2024_csv.zip"
+  },
+  "conjunto_de_datos_ce_yuc_2019_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "ecfd5e277d9e6f406013670170209a62d5e919bea9f26796d4ad0c79a5245997",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_yuc_2019_csv.zip"
+  },
+  "conjunto_de_datos_ce_yuc_2024_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "59acb82b0817b7c870f61540ea6bcb497b4f3060ae6af2d99f971e8c3ecc7064",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_yuc_2024_csv.zip"
+  },
+  "conjunto_de_datos_ce_zac_2019_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "1741ebc224ff068bd3b81e300bacbcc780933d16f3c74c06f80833238fd85d0e",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_zac_2019_csv.zip"
+  },
+  "conjunto_de_datos_ce_zac_2024_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "d735113e346962b02b1de0fb37dc8833e4e59e4ff8dcb2e4121fa51373323c93",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ce/2024/datosabiertos/conjunto_de_datos_ce_zac_2024_csv.zip"
+  },
+  "conjunto_de_datos_immex_manu_ent_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "3e90c6392720483f712d198598afbe6cffab52e4c7e061a087e8dff4db94640d",
+    "url": "https://www.inegi.org.mx/contenidos/programas/immex/datosabiertos/conjunto_de_datos_immex_manu_ent_csv.zip"
+  },
+  "enoe_informalidad_tasas_xls.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "d940bbd2871cefcbb17f2cb98393ac143e9627f782c0a42707c5efeddc178bf7",
+    "url": "https://www.inegi.org.mx/contenidos/programas/enoe/15ymas/tabulados/enoe_informalidad_tasas_xls.zip"
+  },
+  "iter_00_cpv2020_csv.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "9342fdbd45bda5897f2b827a12904843b6f8fb85d4e72da299e09e4d2422ab60",
+    "url": "https://www.inegi.org.mx/contenidos/programas/ccpv/2020/datosabiertos/iter/iter_00_cpv2020_csv.zip"
+  },
+  "mg_2024_integrado.zip": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "6f0101fade017742934e008da93d6464621ddf2547c5d9e59d60da7607a58419",
+    "url": "https://www.inegi.org.mx/contenidos/productos/prod_serv/contenidos/espanol/bvinegi/productos/geografia/marcogeo/794551132173/mg_2024_integrado.zip"
+  },
+  "pl_2005t_2026t.xlsx": {
+    "retrieved_at": "2026-11-16",
+    "sha256": "cfed95a06f177c1b8009657a4a321de078eac5a19cbe00d3ac4dfc44f2f62904",
+    "url": "https://www.inegi.org.mx/contenidos/desarrollosocial/pl/tabulados/pl_2005t_2026t.xlsx"
+  }
+}

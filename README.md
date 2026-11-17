@@ -37,6 +37,10 @@ cd pipeline
 uv run pipeline build
 ```
 
+La primera vez descarga unos 500 MB de archivos del INEGI y de la Secretaría de Economía a `pipeline/data/raw/` (fuera del repositorio) y tarda varios minutos. Cada archivo queda fijado por su suma de verificación en `pipeline/sources.lock.json`: si una fuente publica una versión nueva, el build se detiene en lugar de cambiar cifras en silencio. Para aceptar el cambio, ejecuta `uv run pipeline fetch --refresh` y revisa la diferencia.
+
+El resultado se escribe en `web/public/data/` y se versiona. El flujo manual **Rebuild data** de GitHub Actions repite todo desde cero y falla si el resultado difiere de lo publicado.
+
 ## Comprobaciones
 
 Las mismas que ejecuta la integración continua en cada push.
@@ -46,11 +50,11 @@ Las mismas que ejecuta la integración continua en cada push.
 | Formato y lint | `uv run ruff format --check` y `uv run ruff check` | `pnpm lint` |
 | Tipos | `uv run pyright` | `pnpm typecheck` |
 | Pruebas | `uv run python -m pytest` | `pnpm test` |
-| Build | `uv run pipeline build` | `pnpm build` |
+| Build | | `pnpm build` |
 
 ## Fuentes y licencias
 
-El código se publica bajo licencia [MIT](LICENSE). Las fuentes de datos y sus términos de uso se documentarán en `docs/fuentes.md`.
+El código se publica bajo licencia [MIT](LICENSE). Las fuentes de datos, sus términos de uso y sus limitaciones están en [docs/fuentes.md](docs/fuentes.md); el catálogo de indicadores, en [docs/spec.md](docs/spec.md). Los datos del INEGI se usan bajo sus [Términos de Libre Uso](https://www.inegi.org.mx/inegi/terminos.html), que exigen citar al INEGI como autor.
 
 ## Contribuir
 

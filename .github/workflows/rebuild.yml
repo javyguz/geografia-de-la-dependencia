@@ -1,0 +1,22 @@
+name: Rebuild data
+
+# Regenerates every artifact from the public sources on a clean machine and
+# fails if the result differs from what is committed. It downloads about 500 MB
+# from INEGI, so it runs on demand instead of on every push.
+on:
+  workflow_dispatch:
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: pipeline
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.3.3
+        with:
+          enable-cache: true
+      - run: uv sync --locked
+      - run: uv run pipeline build
+      - run: git diff --exit-code -- ../web/public/data sources.lock.json

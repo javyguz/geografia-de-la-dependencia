@@ -20,7 +20,6 @@ jobs:
       - run: uv run ruff check
       - run: uv run pyright
       - run: uv run python -m pytest
-      - run: uv run pipeline build
 
   web:
     runs-on: ubuntu-latest
