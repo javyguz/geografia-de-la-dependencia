@@ -32,6 +32,11 @@ function mentions(run: Run, ...texts: string[]): string[] {
     .map((t) => `la respuesta no menciona «${t}»`);
 }
 
+/** The number of a formatted value: "24.6 %" → "24.6", so "24.6 por ciento" also counts. */
+function figure(value: ToolValue): string {
+  return value.formatted.split(" ")[0] ?? value.formatted;
+}
+
 function called(run: Run, name: string): string[] {
   return run.calls.some((c) => c.name === name) ? [] : [`no llamó a ${name}`];
 }
@@ -79,19 +84,19 @@ export function cases(data: Data): Case[] {
       id: "state value",
       question:
         "¿Qué parte del valor agregado se paga en remuneraciones en Nuevo León?",
-      check: (run) => mentions(run, nuevoLeon.formatted, "2023"),
+      check: (run) => mentions(run, figure(nuevoLeon), "2023"),
     },
     {
       id: "municipal value",
       question:
         "¿Qué parte del valor agregado se paga en remuneraciones en el municipio de Guadalajara?",
-      check: (run) => mentions(run, guadalajara.formatted),
+      check: (run) => mentions(run, figure(guadalajara)),
     },
     {
       id: "older year",
       question:
         "¿Cuál era la remuneración media por persona remunerada en Jalisco en 2018?",
-      check: (run) => mentions(run, jalisco2018.formatted.split(" ")[0] ?? ""),
+      check: (run) => mentions(run, figure(jalisco2018)),
     },
     {
       id: "ranking",
@@ -103,7 +108,7 @@ export function cases(data: Data): Case[] {
       id: "comparison",
       question:
         "Compara la tasa de informalidad laboral de Chiapas y Nuevo León.",
-      check: (run) => mentions(run, chiapas.formatted, nl.formatted),
+      check: (run) => mentions(run, figure(chiapas), figure(nl)),
     },
     {
       id: "ambiguous place",

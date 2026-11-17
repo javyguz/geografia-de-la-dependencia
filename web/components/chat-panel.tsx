@@ -370,7 +370,7 @@ export function ChatPanel({ host, onScreen, onClose }: Props) {
           <InputGroupAddon align="block-end" className="justify-between">
             {key ? (
               <span className="text-xs text-muted-foreground">
-                Cada pregunta se cobra en tu cuenta de OpenRouter.
+                Modelos gratuitos, con un cupo diario de peticiones.
               </span>
             ) : (
               <InputGroupButton

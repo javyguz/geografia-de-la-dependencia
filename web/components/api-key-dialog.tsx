@@ -43,9 +43,10 @@ export function ApiKeyDialog({ open, onOpenChange, onSave }: Props) {
           <DialogHeader>
             <DialogTitle>Tu clave de OpenRouter</DialogTitle>
             <DialogDescription>
-              El asistente usa modelos de lenguaje a través de OpenRouter, con
-              tu propia clave. Lo que cueste cada pregunta se cobra en tu
-              cuenta.
+              El asistente usa modelos de lenguaje gratuitos a través de
+              OpenRouter, con tu propia clave. No se cobra nada, pero OpenRouter
+              limita cuántas peticiones gratuitas puedes hacer al día, y cada
+              pregunta usa varias.
             </DialogDescription>
           </DialogHeader>
           <ul className="flex list-disc flex-col gap-1 pl-4 text-sm text-muted-foreground">
@@ -55,6 +56,10 @@ export function ApiKeyDialog({ open, onOpenChange, onSave }: Props) {
               pasan por ningún servidor de este sitio.
             </li>
             <li>Puedes borrarla con un clic desde el asistente.</li>
+            <li>
+              Los proveedores de modelos gratuitos pueden guardar las preguntas.
+              No escribas datos personales.
+            </li>
           </ul>
           <FieldGroup>
             <Field>

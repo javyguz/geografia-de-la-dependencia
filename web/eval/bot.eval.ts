@@ -1,7 +1,8 @@
 /**
  * Runs the questions against real models through OpenRouter.
  * `pnpm eval:bot` reads OPENROUTER_API_KEY from ../.env; BOT_MODELS picks the
- * models (comma-separated), by default the app's default one.
+ * models (comma-separated), by default the app's default one; BOT_CASES picks
+ * questions by id; BOT_CONCURRENCY sets how many run at once.
  */
 
 import { afterAll, describe, expect, it } from "vitest";
@@ -14,6 +15,8 @@ import { cases, type Run, unsourcedFigures } from "./questions";
 
 const apiKey = process.env.OPENROUTER_API_KEY ?? "";
 const models = (process.env.BOT_MODELS ?? DEFAULT_MODEL).split(",");
+// BOT_CASES limits the run to some questions, by id; free models have a small daily quota.
+const only = process.env.BOT_CASES?.split(",");
 const data = fullData();
 const host: ToolHost = {
   data: () => data,
@@ -65,24 +68,25 @@ async function ask(
 }
 
 describe.skipIf(!apiKey).each(models)("%s", (model) => {
-  it.concurrent.each(cases(data).map((c) => [c.id, c] as const))(
-    "%s",
-    async (_, test) => {
-      let problems: string[];
-      try {
-        const run = await ask(model, test.question);
-        problems = [
-          ...test.check(run),
-          ...unsourcedFigures(run.answer, run.toolText),
-        ];
-        if (problems.length) problems.push(`respuesta: ${run.answer}`);
-      } catch (error) {
-        problems = [`falló la llamada: ${String(error)}`];
-      }
-      results.push({ model, id: test.id, problems });
-      expect(problems).toEqual([]);
-    },
-  );
+  it.concurrent.each(
+    cases(data)
+      .filter((c) => !only || only.includes(c.id))
+      .map((c) => [c.id, c] as const),
+  )("%s", async (_, test) => {
+    let problems: string[];
+    try {
+      const run = await ask(model, test.question);
+      problems = [
+        ...test.check(run),
+        ...unsourcedFigures(run.answer, run.toolText),
+      ];
+      if (problems.length) problems.push(`respuesta: ${run.answer}`);
+    } catch (error) {
+      problems = [`falló la llamada: ${String(error)}`];
+    }
+    results.push({ model, id: test.id, problems });
+    expect(problems).toEqual([]);
+  });
 });
 
 afterAll(() => {

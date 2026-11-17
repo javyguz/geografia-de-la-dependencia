@@ -1,8 +1,9 @@
 /**
- * The short list of models offered to the visitor. Chosen on 2026-11-17 from
- * OpenRouter's model list (https://openrouter.ai/api/v1/models): cheap, with
- * tool calling, from different providers. The default is the one that did best
- * in the evaluation (`pnpm eval:bot`); see docs/decisiones.md.
+ * The short list of models offered to the visitor: free OpenRouter models only,
+ * with tool calling. Chosen on 2026-11-17 from https://openrouter.ai/api/v1/models
+ * and checked with `pnpm eval:bot`; see docs/decisiones.md. Free models change
+ * often and have a daily request quota, so the list needs checking again from
+ * time to time.
  */
 
 export interface Model {
@@ -11,11 +12,9 @@ export interface Model {
 }
 
 export const MODELS: Model[] = [
-  { id: "anthropic/claude-haiku-5.5", label: "Claude Haiku 5.5" },
-  { id: "openai/gpt-6-luna", label: "GPT-6 Luna" },
-  { id: "deepseek/deepseek-v4-flash", label: "DeepSeek V4 Flash" },
-  { id: "qwen/qwen3.7-flash", label: "Qwen 3.7 Flash" },
-  { id: "google/gemini-3.1-flash-lite", label: "Gemini 3.1 Flash Lite" },
+  { id: "nvidia/nemotron-3.5-super-vl:free", label: "Nemotron 3.5 Super" },
+  { id: "nvidia/nemotron-3.5-lightning:free", label: "Nemotron 3.5 Lightning" },
+  { id: "inclusionai/ling-3.2-flash:free", label: "Ling 3.2 Flash" },
 ];
 
-export const DEFAULT_MODEL = "anthropic/claude-haiku-5.5";
+export const DEFAULT_MODEL = "nvidia/nemotron-3.5-super-vl:free";

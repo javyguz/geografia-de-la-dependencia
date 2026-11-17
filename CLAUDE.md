@@ -56,7 +56,7 @@ Se ejecuta desde `web/`. Export estático (`output: "export"`): sin código de s
 | Tipos | `pnpm typecheck` |
 | Pruebas de `lib/` | `pnpm test` |
 | Pruebas en navegador | `pnpm test:e2e` (usa el Chrome instalado) |
-| Evaluación del asistente | `pnpm eval:bot` (usa `OPENROUTER_API_KEY` de `.env`; cuesta unos céntimos) |
+| Evaluación del asistente | `pnpm eval:bot` (usa `OPENROUTER_API_KEY` de `.env` y el cupo diario de modelos gratuitos; `BOT_CASES` y `BOT_MODELS` acotan la ejecución) |
 | Build | `pnpm build` |
 
 - TypeScript estricto, sin `any`. Biome para formato y lint. Vitest para las funciones puras de `lib/`.

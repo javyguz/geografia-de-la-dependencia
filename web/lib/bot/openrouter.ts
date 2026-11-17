@@ -89,13 +89,21 @@ export function mergeDelta(
   }
 }
 
+/** What went wrong, in the reader's words. Free models fail more often, and the fix is usually another model. */
 function explain(status: number, detail: string): string {
+  const other =
+    "Prueba con otro modelo de la lista o vuelve a intentarlo más tarde.";
   if (status === 401)
     return "OpenRouter no reconoce la clave. Revísala o bórrala y escribe otra.";
   if (status === 402)
-    return `La cuenta de OpenRouter no tiene saldo suficiente para este modelo${detail ? ` (${detail})` : ""}.`;
+    return `OpenRouter rechazó la petición por saldo${detail ? ` (${detail})` : ""}. Los modelos de esta lista son gratuitos; revisa el límite de tu clave.`;
+  if (status === 403)
+    return `Este modelo no está disponible para tu cuenta o tu región. ${other}`;
+  if (status === 404 && /data policy|privacy/i.test(detail))
+    return "Este modelo gratuito exige que permitas en tu cuenta de OpenRouter que el proveedor use las peticiones (Settings, Privacy). Puedes permitirlo o elegir otro modelo.";
   if (status === 429)
-    return "OpenRouter limitó las peticiones. Espera un momento y vuelve a preguntar.";
+    return `El modelo gratuito está saturado o se agotó tu cupo diario de peticiones gratuitas. ${other}`;
+  if (status >= 500) return `El proveedor del modelo no respondió. ${other}`;
   return `OpenRouter respondió con un error (${status})${detail ? `: ${detail}` : ""}.`;
 }
 
