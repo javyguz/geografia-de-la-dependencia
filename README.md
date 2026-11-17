@@ -2,7 +2,19 @@
 
 Mapa interactivo de México, a nivel estatal y municipal, que muestra con datos públicos cómo se distribuye en el territorio el peso del capital extranjero, quién se queda con el valor que se produce y si la integración exportadora mejora o no las condiciones de trabajo locales.
 
-> **Estado:** en construcción. Ya existen el pipeline de datos, el mapa con cuatro capas por entidad y por municipio, la comparación, el contraargumento, la metodología, el asistente y el recorrido (con texto provisional, que se edita en `web/content/tour.json`); falta el pulido y el despliegue.
+![El mapa en «¿Quién se queda con el valor?», con los municipios de Nuevo León y su ficha](docs/captura.png)
+
+## Qué se puede hacer
+
+- **Explorar** cuatro capas, cada una con la pregunta que responde: el peso del capital extranjero, «¿derrama o enclave?» (mapa bivariado), quién se queda con el valor y quién da el empleo. Por entidad y, al acercarse, por municipio, con sector y año.
+- **Ver la ficha** de cada territorio: valor, puesto, valor nacional, cómo se calcula y la fuente con enlace. Cada mapa tiene también una tabla accesible.
+- **Comparar** hasta tres lugares en todos los indicadores.
+- **El contraargumento**: un panel siempre a mano con los datos que pueden contradecir la tesis.
+- **Recorrido** guiado en seis pasos. Su texto se edita en [`web/content/tour.json`](web/content/tour.json).
+- **Metodología** generada a partir del catálogo de indicadores.
+- **Preguntar a los datos**: un asistente que responde con las cifras del mapa usando modelos gratuitos de OpenRouter. Cada visitante usa su propia clave, que se guarda solo en su navegador; sin clave, el resto funciona igual.
+
+Todo el estado vive en la URL, así que cualquier vista se comparte con un enlace.
 
 ## Principios
 
@@ -52,6 +64,16 @@ Las mismas que ejecuta la integración continua en cada push.
 | Pruebas | `uv run python -m pytest` | `pnpm test` y `pnpm test:e2e` (necesita Chrome) |
 | Evaluar el asistente | | `pnpm eval:bot` (necesita `OPENROUTER_API_KEY` en `.env`, ver `.env.example`) |
 | Build | | `pnpm build` |
+
+## Desplegar
+
+El sitio se publica en [Vercel](https://vercel.com) como sitio estático, sin servidor ni variables de entorno:
+
+1. En Vercel, crea un proyecto e importa este repositorio.
+2. Como *Root Directory* elige `web`. Vercel detecta Next.js, pnpm y Node 24.
+3. Tras el primer despliegue, activa *Web Analytics* en el proyecto. Es la única analítica del sitio: sin cookies y servida desde el propio dominio.
+
+Cada push a `main` vuelve a desplegar.
 
 ## Fuentes y licencias
 
