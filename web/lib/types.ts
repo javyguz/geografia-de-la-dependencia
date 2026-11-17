@@ -65,7 +65,6 @@ export interface Layer {
 }
 
 export interface Catalog {
-  generated_at: string;
   sources: Source[];
   sectors: Sector[];
   missing_reasons: MissingReasonInfo[];

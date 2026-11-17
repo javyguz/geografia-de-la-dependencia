@@ -11,9 +11,24 @@ export interface ViewState {
   sector: string;
   year: number | null;
   territory: string | null;
+  mode: Mode;
+  /** Territories side by side in the compare view, in the order they were added. */
+  compare: string[];
+  /** The counterargument panel takes the place of the detail panel. */
+  counterargument: boolean;
 }
 
+export type Mode = "explore" | "compare";
+
 export const DEFAULT_LAYER = "foreign_capital";
+export const MAX_COMPARED = 3;
+
+const MODES: Record<Mode, string> = {
+  explore: "explorar",
+  compare: "comparar",
+};
+const COUNTERARGUMENT = "contraargumento";
+const CVEGEO = /^(\d{2}|\d{5})$/;
 
 const PARAMS = {
   layer: "capa",
@@ -22,6 +37,9 @@ const PARAMS = {
   sector: "sector",
   year: "anio",
   territory: "t",
+  mode: "modo",
+  compare: "cmp",
+  panel: "panel",
 } as const;
 
 export function emptyState(): ViewState {
@@ -32,6 +50,9 @@ export function emptyState(): ViewState {
     sector: "total",
     year: null,
     territory: null,
+    mode: "explore",
+    compare: [],
+    counterargument: false,
   };
 }
 
@@ -45,6 +66,15 @@ export function parseState(search: string): ViewState {
     sector: params.get(PARAMS.sector) ?? "total",
     year: Number.isInteger(year) && year > 0 ? year : null,
     territory: params.get(PARAMS.territory),
+    mode: params.get(PARAMS.mode) === MODES.compare ? "compare" : "explore",
+    compare: [
+      ...new Set(
+        (params.get(PARAMS.compare) ?? "")
+          .split(",")
+          .filter((id) => CVEGEO.test(id)),
+      ),
+    ].slice(0, MAX_COMPARED),
+    counterargument: params.get(PARAMS.panel) === COUNTERARGUMENT,
   };
 }
 
@@ -56,6 +86,10 @@ export function serializeState(state: ViewState): string {
   if (state.sector !== "total") params.set(PARAMS.sector, state.sector);
   if (state.year !== null) params.set(PARAMS.year, String(state.year));
   if (state.territory) params.set(PARAMS.territory, state.territory);
+  if (state.mode !== "explore") params.set(PARAMS.mode, MODES[state.mode]);
+  if (state.compare.length) params.set(PARAMS.compare, state.compare.join(","));
+  if (state.counterargument) params.set(PARAMS.panel, COUNTERARGUMENT);
   const text = params.toString();
-  return text ? `?${text}` : "";
+  // Commas are legal in a query; leaving them plain keeps shared links readable.
+  return text ? `?${text.replaceAll("%2C", ",")}` : "";
 }
