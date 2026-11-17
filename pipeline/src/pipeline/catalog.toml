@@ -242,11 +242,19 @@ indicators = [
 ]
 
 [counterargument]
-pairs = [
-  ["wage_per_paid_worker_foreign", "wage_per_paid_worker_domestic"],
-  ["labor_share_foreign", "labor_share_domestic"],
-]
+title = "El contraargumento"
+description = "Datos que pueden contradecir la tesis del mapa, calculados con el mismo método y las mismas fuentes que el resto. Las dos primeras comparaciones enfrentan las unidades económicas grandes con y sin capital extranjero."
 single = ["unpaid_worker_share_micro"]
+
+[[counterargument.pairs]]
+name = "Remuneración media por persona remunerada en unidades grandes"
+foreign = "wage_per_paid_worker_foreign"
+domestic = "wage_per_paid_worker_domestic"
+
+[[counterargument.pairs]]
+name = "Parte del valor agregado pagada en remuneraciones en unidades grandes"
+foreign = "labor_share_foreign"
+domestic = "labor_share_domestic"
 
 # ── Indicadores ──────────────────────────────────────────────────────────────
 

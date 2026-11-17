@@ -67,7 +67,7 @@ def validate_catalog(catalog: Catalog) -> None:
         for group in ("indicators", "context", "integration", "conditions"):
             referenced += layer.get(group, [])
     counterargument = catalog["counterargument"]
-    referenced += [i for pair in counterargument["pairs"] for i in pair]
+    referenced += [p[side] for p in counterargument["pairs"] for side in ("foreign", "domestic")]
     referenced += counterargument["single"]
     _require(set(referenced) <= indicators, "a layer references an unknown indicator")
     _require(indicators <= set(referenced), "an indicator is not used by any layer")

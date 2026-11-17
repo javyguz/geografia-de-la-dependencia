@@ -70,7 +70,13 @@ export interface Catalog {
   sectors: Sector[];
   missing_reasons: MissingReasonInfo[];
   layers: Layer[];
-  counterargument: { pairs: [string, string][]; single: string[] };
+  counterargument: {
+    title: string;
+    description: string;
+    /** The same measure with and without foreign capital. */
+    pairs: { name: string; foreign: string; domestic: string }[];
+    single: string[];
+  };
   indicators: Indicator[];
 }
 
