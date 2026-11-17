@@ -1,0 +1,2 @@
+# Same line endings on every OS, so formatters agree between Windows and CI.
+* text=auto eol=lf

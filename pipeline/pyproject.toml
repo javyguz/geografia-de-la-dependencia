@@ -1,0 +1,33 @@
+[project]
+name = "pipeline"
+version = "0.1.0"
+description = "Data pipeline for Geografía de la dependencia: downloads public sources and builds the artifacts the web app reads."
+requires-python = ">=3.14"
+dependencies = []
+
+[project.scripts]
+pipeline = "pipeline.cli:main"
+
+[build-system]
+requires = ["uv_build>=0.11.26,<0.12.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pyright>=1.1.414",
+    "pytest>=9.2.0",
+    "ruff>=0.17.5",
+]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "UP", "B", "SIM", "C4", "PTH", "RUF"]
+
+[tool.pyright]
+include = ["src", "tests"]
+typeCheckingMode = "strict"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -1,0 +1,20 @@
+# Raw downloads from the public sources. Reproducible with `uv run pipeline build`.
+/pipeline/data/
+
+# Secrets (API tokens). Document every variable in .env.example instead.
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+.venv/
+.pytest_cache/
+.ruff_cache/
+
+# Third-party agent skills. Restore with `npx skills experimental_install`.
+/.agents/
+/.claude/skills/
+/.claude/settings.local.json
+
+.DS_Store
