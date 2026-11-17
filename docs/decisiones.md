@@ -64,3 +64,9 @@ Decisiones de detalle tomadas durante el desarrollo, con su motivo. Las decision
 | El formato de `missing` es `{motivo: [posiciones]}`, no `{posición: motivo}`. | Es como lo escribe el pipeline desde la fase 3: más corto cuando muchos territorios comparten motivo. La especificación se corrigió. |
 | Playwright usa el Chrome instalado (`channel: "chrome"`) y sus pruebas viven en `web/e2e/`. | Evita descargar un navegador. Vitest solo corre `lib/`. |
 | Shadcn/ui con la base Radix y el estilo `nova`, con los tokens de la especificación encima. | El estilo da la estructura de los componentes; colores, radio de 2 px y tipografía son los aprobados. Archivo se instala con `@fontsource-variable/archivo` en vez de `next/font/google`, para que el build no dependa de Google. |
+
+## Fase 5 — Nivel municipal
+
+| Decisión | Motivo |
+|---|---|
+| Los valores municipales por sector van en un archivo por sector con todos los municipios (`values/municipalities-sectors/{sector}.json`), no en uno por entidad. | El mapa clasifica sobre todo el nivel visible para que los colores no cambien al moverse. Con archivos por entidad, elegir un sector habría exigido descargar los 32. Cada sector pesa como mucho 63 KB comprimido. |

@@ -147,11 +147,19 @@ def build() -> None:
         OUTPUT_DIR / "values" / "municipalities.json",
         export.values_file(all_sectors, "municipality", municipality_ids, catalog),
     )
-    for state in STATES:
-        ids = [key for key in municipality_ids if key.startswith(state)]
-        rows = by_sector.filter(pl.col("territory").str.starts_with(state))
+    # One file per sector with every municipality: the map classifies over the whole
+    # level, so a sector needs all municipalities at once and nothing else.
+    sectors_dir = OUTPUT_DIR / "values" / "municipalities-sectors"
+    for stale in sectors_dir.glob("*.json"):
+        stale.unlink()
+    for sector in by_sector["sector"].unique().sort():
         export.write_json(
-            OUTPUT_DIR / "values" / "municipalities-sectors" / f"{state}.json",
-            export.values_file(rows, "municipality", ids, catalog),
+            sectors_dir / f"{sector}.json",
+            export.values_file(
+                by_sector.filter(pl.col("sector") == sector),
+                "municipality",
+                municipality_ids,
+                catalog,
+            ),
         )
     print(f"done: artifacts written to {OUTPUT_DIR}")

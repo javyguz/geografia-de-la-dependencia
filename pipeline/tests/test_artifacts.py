@@ -41,6 +41,8 @@ def test_geometry_and_values_share_the_same_keys() -> None:
     assert load("values/states.json")["territories"] == [NATIONAL, *STATES]
     assert load("values/municipalities.json")["territories"] == municipalities
     assert [t["id"] for t in load("territories.json")] == [NATIONAL, *STATES, *municipalities]
+    for path in (OUTPUT_DIR / "values" / "municipalities-sectors").glob("*.json"):
+        assert json.loads(path.read_text(encoding="utf-8"))["territories"] == municipalities
 
 
 @pytest.mark.parametrize(
@@ -48,7 +50,7 @@ def test_geometry_and_values_share_the_same_keys() -> None:
     [
         "values/states.json",
         "values/municipalities.json",
-        "values/municipalities-sectors/20.json",
+        "values/municipalities-sectors/31-33.json",
     ],
 )
 def test_every_missing_value_has_exactly_one_reason(name: str) -> None:

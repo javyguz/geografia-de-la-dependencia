@@ -125,7 +125,7 @@ geo/states.geojson
 geo/municipalities.geojson        o municipalities.pmtiles
 values/states.json
 values/municipalities.json
-values/municipalities-sectors/{EE}.json
+values/municipalities-sectors/{sector}.json
 ```
 
 | Archivo | Contenido | Cuándo se carga |
@@ -136,7 +136,7 @@ values/municipalities-sectors/{EE}.json
 | `values/states.json` | Todos los indicadores estatales, con sectores y el valor nacional | Al inicio |
 | `geo/municipalities.*` | 2,478 municipios simplificados | Al acercarse o entrar a una entidad |
 | `values/municipalities.json` | Indicadores municipales del total de sectores | Con la geometría municipal |
-| `values/municipalities-sectors/{EE}.json` | Indicadores municipales por sector, un archivo por entidad | Al elegir un sector dentro de una entidad |
+| `values/municipalities-sectors/{sector}.json` | Indicadores municipales de un sector, con todos los municipios | Al elegir un sector en el nivel municipal |
 
 Las geometrías municipales serán un GeoJSON único si, simplificadas, pesan 1.5 MB o menos comprimidas; si no, PMTiles.
 
