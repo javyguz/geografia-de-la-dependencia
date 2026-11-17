@@ -123,3 +123,12 @@ Decisiones de detalle tomadas durante el desarrollo, con su motivo. Las decision
 | `pnpm test` valida cada paso: capa, indicador de esa capa, sector y territorio existentes, y al menos un párrafo. | Un error al editar el archivo se detecta antes de publicarlo. |
 | El panel del recorrido ocupa el lugar de la ficha; el último paso ofrece abrir el contraargumento. Se añade el parámetro `paso` a la URL. | Nunca hay dos paneles a la vez, y cada paso se puede compartir con un enlace. |
 
+## Fase 9 — Pulido y despliegue
+
+| Decisión | Motivo |
+|---|---|
+| La vista nacional se genera en el build: la página lee el catálogo y los valores estatales y los escribe en el HTML. La geometría y la lista completa de lugares llegan después por `fetch`, pedidas con `preload` desde el HTML. | Las cifras se ven con el primer pintado, también sin JavaScript. Lighthouse móvil pasó de 62 a 80–88. El HTML pesa 40 KB comprimido. |
+| MapLibre se carga aparte (`next/dynamic`) y se monta después de que se pinta la ficha. | Es el código más pesado de la página (282 KB). Así no retrasa las cifras; el mapa aparece un instante después. |
+| No se persiguió más el 90 de rendimiento en móvil. | Lo que queda es la ejecución de MapLibre en la CPU lenta que simula Lighthouse (unos 600 ms). Bajarlo exigiría no mostrar el mapa hasta que el lector haga algo, y el mapa es la página. En escritorio da 100; accesibilidad, buenas prácticas y SEO dan 100 en ambos. |
+| La clave y el modelo del asistente se leen de `localStorage` después de montar. | La página se renderiza en el build, donde no hay almacenamiento; leerlos al inicializar daba un HTML distinto del primer render del cliente. |
+

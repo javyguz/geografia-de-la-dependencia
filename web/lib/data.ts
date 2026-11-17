@@ -17,7 +17,8 @@ export interface Data {
   /** Every territory by key, both levels and the national row ("00"). */
   territories: Map<string, Territory>;
   states: ValuesFile;
-  stateGeometry: FeatureCollection;
+  /** Null until it loads; the figures do not need it. */
+  stateGeometry: FeatureCollection | null;
   municipal: MunicipalData | null;
 }
 
@@ -27,20 +28,36 @@ async function getJson<T>(path: string): Promise<T> {
   return (await response.json()) as T;
 }
 
-export async function loadData(): Promise<Data> {
-  const [catalog, territories, states, stateGeometry] = await Promise.all([
-    getJson<Catalog>("catalog.json"),
-    getJson<Territory[]>("territories.json"),
-    getJson<ValuesFile>("values/states.json"),
-    getJson<FeatureCollection>("geo/states.geojson"),
-  ]);
+/** What the first view needs, read at build time and written into the page (app/page.tsx). */
+export interface Initial {
+  catalog: Catalog;
+  /** The national row and the 32 states; municipalities arrive with `loadRest`. */
+  territories: Territory[];
+  states: ValuesFile;
+}
+
+export function initialData(initial: Initial): Data {
   return {
-    catalog,
-    territories: new Map(territories.map((t) => [t.id, t])),
-    states,
-    stateGeometry,
+    catalog: initial.catalog,
+    territories: new Map(initial.territories.map((t) => [t.id, t])),
+    states: initial.states,
+    stateGeometry: null,
     municipal: null,
   };
+}
+
+/** Fetched after the page shows its figures. The page asks for them with its HTML. */
+export const LATER_FILES = ["territories.json", "geo/states.geojson"] as const;
+
+export async function loadRest(): Promise<{
+  territories: Territory[];
+  stateGeometry: FeatureCollection;
+}> {
+  const [territories, stateGeometry] = await Promise.all([
+    getJson<Territory[]>(LATER_FILES[0]),
+    getJson<FeatureCollection>(LATER_FILES[1]),
+  ]);
+  return { territories, stateGeometry };
 }
 
 export async function loadMunicipalities(): Promise<MunicipalData> {

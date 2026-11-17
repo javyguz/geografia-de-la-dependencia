@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ChatPanel } from "@/components/chat-panel";
 import { CompareView } from "@/components/compare-view";
@@ -7,7 +8,7 @@ import { Controls } from "@/components/controls";
 import { CounterargumentPanel } from "@/components/counterargument-panel";
 import { DetailPanel } from "@/components/detail-panel";
 import { Legend } from "@/components/legend";
-import { type FocusRequest, MapView } from "@/components/map-view";
+import type { FocusRequest } from "@/components/map-view";
 import { SiteHeader } from "@/components/site-header";
 import { TableDialog } from "@/components/table-dialog";
 import { TerritorySearch } from "@/components/territory-search";
@@ -17,11 +18,13 @@ import type { ToolHost } from "@/lib/bot/execute";
 import { boundsByTerritory, MEXICO } from "@/lib/bounds";
 import {
   type Data,
+  type Initial,
+  initialData,
   type Level,
   levelOf,
-  loadData,
   loadMunicipalities,
   loadMunicipalSector,
+  loadRest,
   NATIONAL,
   stateOf,
   valuesOf,
@@ -39,8 +42,23 @@ import {
 import { useTheme } from "@/lib/use-theme";
 import { hasMunicipalities, paintFor, resolve } from "@/lib/view";
 
-export function Explorer() {
-  const [data, setData] = useState<Data | null>(null);
+// MapLibre is the largest part of the page's code. Loaded apart, it no longer holds
+// back the controls, legend and panel, which appear as soon as the data arrives.
+const MapView = dynamic(
+  () => import("@/components/map-view").then((m) => m.MapView),
+  {
+    ssr: false,
+    loading: () => (
+      <p className="absolute inset-0 grid place-items-center text-sm text-muted-foreground">
+        Cargando el mapa…
+      </p>
+    ),
+  },
+);
+
+export function Explorer({ initial }: { initial: Initial }) {
+  // The national view arrives in the HTML; nothing waits for a request to show figures.
+  const [data, setData] = useState<Data>(() => initialData(initial));
   const [failed, setFailed] = useState(false);
   const [municipalFailed, setMunicipalFailed] = useState(false);
   const [state, setState] = useState<ViewState>(emptyState);
@@ -49,8 +67,9 @@ export function Explorer() {
   const [zoomedIn, setZoomedIn] = useState(false);
   const [focus, setFocus] = useState<FocusRequest | null>(null);
   const [chatOpen, setChatOpen] = useState(false);
+  const [mapReady, setMapReady] = useState(false);
   // The assistant's tools run outside React's render, so they read the data from here.
-  const dataRef = useRef<Data | null>(null);
+  const dataRef = useRef(data);
   const pending = useRef(new Map<string, Promise<void>>());
   const theme = useTheme();
   const palette = paletteFor(theme);
@@ -59,10 +78,14 @@ export function Explorer() {
   useEffect(() => {
     setState(parseState(window.location.search));
     setUrlRead(true);
-    loadData().then(
-      (loaded) => {
-        dataRef.current = loaded;
-        setData(loaded);
+    loadRest().then(
+      ({ territories, stateGeometry }) => {
+        dataRef.current = {
+          ...dataRef.current,
+          territories: new Map(territories.map((t) => [t.id, t])),
+          stateGeometry,
+        };
+        setData(dataRef.current);
       },
       () => setFailed(true),
     );
@@ -77,32 +100,38 @@ export function Explorer() {
     );
   }, [state, urlRead]);
 
+  // The map's code is the heaviest on the page. It is asked for once the panel and
+  // the legend have been painted, so on a slow phone the figures come first.
+  useEffect(() => {
+    if (!data.stateGeometry || mapReady) return;
+    const frame = requestAnimationFrame(() =>
+      setTimeout(() => setMapReady(true)),
+    );
+    return () => cancelAnimationFrame(frame);
+  }, [data.stateGeometry, mapReady]);
+
   const update = useCallback((patch: Partial<ViewState>) => {
     setState((current) => ({ ...current, ...patch }));
   }, []);
 
-  const resolved = useMemo(
-    () => (data ? resolve(data, state) : null),
-    [data, state],
-  );
+  const resolved = useMemo(() => resolve(data, state), [data, state]);
   const stateBounds = useMemo(
-    () => (data ? boundsByTerritory(data.stateGeometry) : null),
-    [data],
+    () => (data.stateGeometry ? boundsByTerritory(data.stateGeometry) : null),
+    [data.stateGeometry],
   );
 
   const selected =
-    data &&
     state.territory &&
     state.territory !== NATIONAL &&
     data.territories.has(state.territory)
       ? state.territory
       : null;
-  const compared = data
-    ? state.compare.filter((id) => id !== NATIONAL && data.territories.has(id))
-    : [];
+  const compared = state.compare.filter(
+    (id) => id !== NATIONAL && data.territories.has(id),
+  );
   const comparing = state.mode === "compare";
-  const municipal = resolved !== null && hasMunicipalities(resolved);
-  const sector = resolved?.sector ?? "total";
+  const municipal = hasMunicipalities(resolved);
+  const sector = resolved.sector;
   const wantsMunicipal = municipal && zoomedIn;
   // Municipal values are needed to paint municipalities, and to describe any municipality on screen.
   const visible = [selected, ...(comparing ? compared : [])];
@@ -110,13 +139,12 @@ export function Explorer() {
     wantsMunicipal ||
     visible.some((id) => id !== null && levelOf(id) === "municipality");
   const level: Level =
-    data && wantsMunicipal && valuesOf(data, "municipality", sector)
+    wantsMunicipal && valuesOf(data, "municipality", sector)
       ? "municipality"
       : "state";
 
   // Every change to the data goes through here, so the tools see it at once.
   const commit = useCallback((change: (d: Data) => Data) => {
-    if (!dataRef.current) return;
     dataRef.current = change(dataRef.current);
     setData(dataRef.current);
   }, []);
@@ -202,7 +230,7 @@ export function Explorer() {
   /** Shows a step of the tour: its view, framed on its place or on the whole country. */
   const goToStep = (index: number) => {
     const step = STEPS[index];
-    if (!step || !data) return;
+    if (!step) return;
     const view = stepView(step, index);
     setChatOpen(false);
     update(view);
@@ -224,27 +252,9 @@ export function Explorer() {
   };
 
   const paint = useMemo(
-    () => (data && resolved ? paintFor(data, resolved, palette, level) : null),
+    () => paintFor(data, resolved, palette, level),
     [data, resolved, palette, level],
   );
-
-  if (failed) {
-    return (
-      <main className="grid h-dvh place-items-center p-8 text-center">
-        <p>
-          No se pudieron cargar los datos. Recarga la página para intentarlo de
-          nuevo.
-        </p>
-      </main>
-    );
-  }
-  if (!data || !resolved || !paint) {
-    return (
-      <main className="grid h-dvh place-items-center text-muted-foreground">
-        <p>Cargando datos…</p>
-      </main>
-    );
-  }
 
   // At the state level a selected municipality is outlined through its state.
   const onMap =
@@ -322,22 +332,30 @@ export function Explorer() {
             <Controls data={data} resolved={resolved} onChange={update} />
           </div>
           <div className="relative min-h-40 flex-1 md:absolute md:inset-0 md:min-h-0">
-            <MapView
-              stateGeometry={data.stateGeometry}
-              municipalGeometry={data.municipal?.geometry ?? null}
-              level={level}
-              palette={palette}
-              fills={paint.fills}
-              missing={paint.missing}
-              selected={onMap}
-              focus={focus}
-              onSelect={(id) => {
-                update({ territory: id });
-                // Clicking a state enters it; inside, clicks pick municipalities.
-                if (id && level === "state") enter(id);
-              }}
-              onZoomedInChange={setZoomedIn}
-            />
+            {failed && (
+              <p className="absolute inset-0 grid place-items-center p-8 text-center text-sm text-muted-foreground">
+                No se pudo cargar el mapa. Las cifras de la ficha y la tabla
+                siguen disponibles; recarga la página para intentarlo de nuevo.
+              </p>
+            )}
+            {mapReady && data.stateGeometry && (
+              <MapView
+                stateGeometry={data.stateGeometry}
+                municipalGeometry={data.municipal?.geometry ?? null}
+                level={level}
+                palette={palette}
+                fills={paint.fills}
+                missing={paint.missing}
+                selected={onMap}
+                focus={focus}
+                onSelect={(id) => {
+                  update({ territory: id });
+                  // Clicking a state enters it; inside, clicks pick municipalities.
+                  if (id && level === "state") enter(id);
+                }}
+                onZoomedInChange={setZoomedIn}
+              />
+            )}
             {zoomedIn && (
               <Button
                 variant="secondary"

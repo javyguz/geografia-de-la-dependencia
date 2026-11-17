@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowUpIcon, SquareIcon, XIcon } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ApiKeyDialog } from "@/components/api-key-dialog";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Bubble, BubbleContent } from "@/components/ui/bubble";
@@ -101,13 +101,14 @@ function failed(messages: ChatMessage[], id: string): boolean {
 
 export function ChatPanel({ host, onScreen, onClose }: Props) {
   const data = host.data();
-  const [key, setKey] = useState<string | null>(readKey);
-  const [model, setModel] = useState(() => {
+  const [key, setKey] = useState<string | null>(null);
+  const [model, setModel] = useState(DEFAULT_MODEL);
+  // Read after mount: the page is rendered at build time, where there is no storage.
+  useEffect(() => {
+    setKey(readKey());
     const saved = readModel();
-    return MODELS.some((m) => m.id === saved)
-      ? (saved as string)
-      : DEFAULT_MODEL;
-  });
+    if (MODELS.some((m) => m.id === saved)) setModel(saved as string);
+  }, []);
   const [askingKey, setAskingKey] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [draft, setDraft] = useState("");
