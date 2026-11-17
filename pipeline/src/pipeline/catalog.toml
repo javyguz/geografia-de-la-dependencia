@@ -14,6 +14,8 @@ url = "https://www.inegi.org.mx/programas/ce/2024/"
 license = "Términos de Libre Uso de la Información del INEGI"
 license_url = "https://www.inegi.org.mx/inegi/terminos.html"
 file = "conjunto_de_datos_ce_nac_2024_csv.zip"
+# Census year the figures describe; the web app lists only the sources of the year on screen.
+years = [2023]
 
 [[sources]]
 id = "ce2019"
@@ -23,6 +25,7 @@ url = "https://www.inegi.org.mx/programas/ce/2024/"
 license = "Términos de Libre Uso de la Información del INEGI"
 license_url = "https://www.inegi.org.mx/inegi/terminos.html"
 file = "conjunto_de_datos_ce_nac_2019_csv.zip"
+years = [2018]
 
 [[sources]]
 id = "ce2024_foreign_capital"
@@ -358,9 +361,9 @@ years = [2023]
 year_note = "IED de 2019 a 2023; población de 2020."
 by_sector = false
 coverage = "Flujos notificados al Registro Nacional de Inversiones Extranjeras."
+# Shown with the value wherever it appears, not only in the methodology.
+warning = "La entidad de destino la reportan las propias empresas o, cuando no tienen el dato, la asigna la Secretaría de Economía según su presencia operativa: no es una medición directa de dónde opera la inversión. La Ciudad de México concentra {cdmx_share} del total nacional del periodo."
 limitations = [
-  "La entidad de destino la reportan las propias empresas o, cuando no tienen el dato, la asigna la Secretaría de Economía según su presencia operativa. No es una medición directa de dónde opera la inversión.",
-  "La Ciudad de México concentra {cdmx_share} del total nacional del periodo.",
   "Las cifras son preliminares y se revisan cada trimestre; una revisión puede cambiar cualquier año.",
   "Un flujo puede ser negativo cuando salen más recursos de los que entran.",
   "No se publica por municipio.",

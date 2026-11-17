@@ -26,12 +26,19 @@ def build_catalog(definition: Catalog, lock: Lock, notes: dict[str, str]) -> Cat
         {**{k: v for k, v in source.items() if k != "file"}, **_retrieved(source, lock)}
         for source in definition["sources"]
     ]
-    indicators = [
-        {**indicator, "limitations": [text.format(**notes) for text in indicator["limitations"]]}
-        for indicator in definition["indicators"]
-    ]
+    indicators = [_fill(indicator, notes) for indicator in definition["indicators"]]
     return {**definition, "sources": sources, "indicators": indicators}
 
 
 def _retrieved(source: Catalog, lock: Lock) -> dict[str, str]:
     return {"retrieved_at": lock[source["file"]]["retrieved_at"]}
+
+
+def _fill(indicator: Catalog, notes: dict[str, str]) -> Catalog:
+    filled = {
+        **indicator,
+        "limitations": [text.format(**notes) for text in indicator["limitations"]],
+    }
+    if "warning" in indicator:
+        filled["warning"] = indicator["warning"].format(**notes)
+    return filled
