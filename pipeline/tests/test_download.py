@@ -1,4 +1,6 @@
+import io
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -28,3 +30,39 @@ def test_a_file_that_changed_at_the_source_stops_the_build(raw_dir: Path) -> Non
     lock: download.Lock = {RAW.name: {"sha256": "0" * 64, "retrieved_at": "2026-01-01"}}
     with pytest.raises(download.SourceChangedError):
         download.ensure(RAW, lock)
+
+
+class FakeResponse(io.BytesIO):
+    """What urlopen returns: a stream with headers, usable as a context manager."""
+
+    def __init__(self, body: bytes, length: int) -> None:
+        super().__init__(body)
+        self.headers = {"Content-Type": "application/zip", "Content-Length": str(length)}
+
+
+def serve(monkeypatch: pytest.MonkeyPatch, *responses: FakeResponse) -> list[Any]:
+    calls: list[Any] = []
+    queue = list(responses)
+
+    def urlopen(request: Any, timeout: int) -> FakeResponse:
+        calls.append(request)
+        return queue.pop(0)
+
+    monkeypatch.setattr(download.urllib.request, "urlopen", urlopen)
+    return calls
+
+
+def test_a_download_cut_short_is_retried(raw_dir: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    calls = serve(monkeypatch, FakeResponse(b"PK", 4), FakeResponse(b"PK..", 4))
+    download.download(RAW, raw_dir / RAW.name)
+    assert len(calls) == 2
+    assert (raw_dir / RAW.name).read_bytes() == b"PK.."
+
+
+def test_a_download_that_never_arrives_whole_is_not_called_a_new_version(
+    raw_dir: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    serve(monkeypatch, *(FakeResponse(b"PK", 4) for _ in range(download.ATTEMPTS)))
+    with pytest.raises(download.DownloadError):
+        download.download(RAW, raw_dir / RAW.name)
+    assert not (raw_dir / RAW.name).exists()

@@ -6,6 +6,7 @@ checksum, so a silent change at the source can never change a published figure.
 """
 
 import hashlib
+import http.client
 import json
 import shutil
 import urllib.request
@@ -21,8 +22,16 @@ type Lock = dict[str, dict[str, str]]
 USER_AGENT = "Mozilla/5.0"
 
 
+# Large files (the geostatistical framework is 284 MB) sometimes arrive cut short.
+ATTEMPTS = 3
+
+
 class SourceChangedError(Exception):
     pass
+
+
+class DownloadError(Exception):
+    """The file could not be downloaded whole. Nothing is known about the source."""
 
 
 def read_lock() -> Lock:
@@ -44,15 +53,35 @@ def sha256_of(path: Path) -> str:
     return digest.hexdigest()
 
 
-def download(raw: RawFile, target: Path) -> None:
+def download_once(raw: RawFile, partial: Path) -> None:
     request = urllib.request.Request(raw.url, headers={"User-Agent": USER_AGENT})
-    partial = target.with_suffix(target.suffix + ".part")
     with urllib.request.urlopen(request, timeout=120) as response:
         # INEGI serves a "page not found" HTML with status 200 for missing files.
         if "text/html" in response.headers.get("Content-Type", ""):
             raise SourceChangedError(f"{raw.url} returned a web page instead of a file")
+        expected = response.headers.get("Content-Length")
         with partial.open("wb") as file:
             shutil.copyfileobj(response, file)
+    # A connection closed early leaves a short file without raising; the size tells.
+    received = partial.stat().st_size
+    if expected is not None and received != int(expected):
+        raise DownloadError(f"received {received} of {expected} bytes")
+
+
+def download(raw: RawFile, target: Path) -> None:
+    partial = target.with_suffix(target.suffix + ".part")
+    for attempt in range(1, ATTEMPTS + 1):
+        try:
+            download_once(raw, partial)
+            break
+        except (DownloadError, OSError, http.client.HTTPException) as error:
+            partial.unlink(missing_ok=True)
+            if attempt == ATTEMPTS:
+                raise DownloadError(
+                    f"{raw.name} could not be downloaded whole after {ATTEMPTS} attempts "
+                    f"({error}). The source has not been shown to change; try again later."
+                ) from error
+            print(f"retrying {raw.name}: {error}")
     partial.replace(target)
 
 
@@ -74,8 +103,9 @@ def ensure(raw: RawFile, lock: Lock, *, refresh: bool = False) -> Path:
         }
     elif pinned["sha256"] != checksum:
         raise SourceChangedError(
-            f"{raw.name} does not match its pinned checksum. The source published a new "
-            "version: review the change and run `uv run pipeline fetch --refresh`."
+            f"{raw.name} ({path.stat().st_size} bytes) does not match its pinned checksum. The "
+            "source published a new version: review the change and run "
+            "`uv run pipeline fetch --refresh`."
         )
     return path
 
