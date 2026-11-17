@@ -144,7 +144,6 @@ Las geometrías municipales serán un GeoJSON único si, simplificadas, pesan 1.
 
 ```jsonc
 {
-  "generated_at": "2026-11-20",
   "sources": [{
     "id": "ce2024_open_data",
     "name": "Censos Económicos 2024, datos abiertos",
@@ -384,7 +383,7 @@ Móvil:
 
 ### Estado en la URL
 
-`?capa=valor&ind=labor_share&sector=31-33&anio=2023&t=08037&cmp=08037,19039&modo=comparar`
+`?capa=valor&ind=labor_share&sector=31-33&anio=2023&t=08037&cmp=08037,19039&modo=comparar&panel=contraargumento`
 
 | Parámetro | Contenido |
 |---|---|
@@ -394,5 +393,6 @@ Móvil:
 | `t` | Territorio seleccionado (`CVEGEO`) |
 | `cmp` | Territorios en comparación, separados por comas |
 | `modo` | `explorar` (por defecto), `comparar` o `recorrido` |
+| `panel` | `contraargumento` cuando ese panel ocupa el lugar de la ficha |
 
 Los valores por defecto no se escriben en la URL.

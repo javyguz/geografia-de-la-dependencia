@@ -77,3 +77,19 @@ Decisiones de detalle tomadas durante el desarrollo, con su motivo. Las decision
 | La búsqueda filtra en el código propio (`lib/search.ts`) y muestra como mucho 30 resultados, entidades primero, con el nombre de la entidad junto a cada municipio. | cmdk habría renderizado 2,510 opciones. Varios municipios se llaman igual («Juárez» existe en cinco entidades). |
 | La tabla alternativa municipal lista los municipios de la entidad seleccionada, o los 2,478 con su entidad si no hay selección. | Es la misma información que el mapa, en un tamaño legible. |
 | Los límites estatales se dibujan más gruesos y en gris sobre los municipios. | Con el mismo trazo que los municipales no se distinguían. |
+
+## Fase 6 — Comparar, contraargumento y metodología
+
+| Decisión | Motivo |
+|---|---|
+| Comparar muestra cada indicador en su año más reciente y para todos los sectores, con una columna nacional. Un indicador que no existe por municipio muestra el valor de la entidad con su nombre debajo. | Así cada columna lee la misma serie y la comparación no depende del sector elegido en el mapa. |
+| La vista de comparación cubre el mapa en lugar de desmontarlo. | Al volver a Explorar el mapa conserva su encuadre y su nivel. |
+| En móvil la tabla de comparación se desplaza en horizontal con la columna de indicadores fija. | Cuatro columnas de cifras no caben en 390 px; con la columna fija cada valor conserva su nombre. |
+| Los títulos y la presentación del contraargumento viven en el catálogo, con cada pareja nombrada (`foreign`, `domestic`). | Son textos que describen datos; el catálogo es su única fuente. |
+| El panel del contraargumento no resume la tesis: da para cada pareja en cuántas entidades la cifra con capital extranjero es mayor y en cuántas menor, calculado en el navegador sobre los datos del mapa. | Los datos apuntan en direcciones distintas: la remuneración media es mayor con capital extranjero en 27 de 32 entidades, y la parte del valor agregado pagada en remuneraciones es menor en 20 de 32. Un texto fijo podría quedar desmentido por el siguiente build. |
+| El botón «El contraargumento» es el único botón primario del mapa, abajo a la derecha; «Ver todo el país» pasó arriba a la derecha. | La especificación lo pide fijo y visible en el borde inferior. |
+| Se añade el parámetro `panel=contraargumento` a la URL. | El planteamiento pide que todo el estado relevante se pueda compartir con un enlace; la especificación no tenía dónde guardarlo. |
+| La metodología es una página estática que importa `catalog.json` en el build. Cada indicador se describe una vez, bajo la primera capa que lo usa; las demás capas lo enlazan. | Sin peticiones al cargar y sin texto duplicado. Dos indicadores se usan en dos capas, y describirlos dos veces habría repetido sus anclas. |
+| El catálogo no lleva `generated_at`; se quitó del tipo y del ejemplo de la especificación. | El pipeline nunca lo escribió y la página lo habría mostrado vacío. Cada fuente ya lleva su fecha de descarga. |
+| La navegación son enlaces con `aria-current`; en móvil va en un menú. | Explorar, Comparar y Metodología son secciones, no opciones de un control. En 390 px no caben junto al título y la búsqueda. |
+

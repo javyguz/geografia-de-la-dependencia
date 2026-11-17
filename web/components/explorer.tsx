@@ -1,10 +1,13 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { CompareView } from "@/components/compare-view";
 import { Controls } from "@/components/controls";
+import { CounterargumentPanel } from "@/components/counterargument-panel";
 import { DetailPanel } from "@/components/detail-panel";
 import { Legend } from "@/components/legend";
 import { type FocusRequest, MapView } from "@/components/map-view";
+import { SiteHeader } from "@/components/site-header";
 import { TableDialog } from "@/components/table-dialog";
 import { TerritorySearch } from "@/components/territory-search";
 import { Button } from "@/components/ui/button";
@@ -23,6 +26,8 @@ import {
 import { paletteFor } from "@/lib/palettes";
 import {
   emptyState,
+  MAX_COMPARED,
+  type Mode,
   parseState,
   serializeState,
   type ViewState,
@@ -79,12 +84,18 @@ export function Explorer() {
     data.territories.has(state.territory)
       ? state.territory
       : null;
+  const compared = data
+    ? state.compare.filter((id) => id !== NATIONAL && data.territories.has(id))
+    : [];
+  const comparing = state.mode === "compare";
   const municipal = resolved !== null && hasMunicipalities(resolved);
   const sector = resolved?.sector ?? "total";
   const wantsMunicipal = municipal && zoomedIn;
+  // Municipal values are needed to paint municipalities, and to describe any municipality on screen.
+  const onScreen = [selected, ...(comparing ? compared : [])];
   const needsMunicipal =
-    municipal &&
-    (zoomedIn || (selected !== null && levelOf(selected) === "municipality"));
+    wantsMunicipal ||
+    onScreen.some((id) => id !== null && levelOf(id) === "municipality");
   const level: Level =
     data && wantsMunicipal && valuesOf(data, "municipality", sector)
       ? "municipality"
@@ -139,6 +150,12 @@ export function Explorer() {
     if (selected) enter(selected);
   }, [stateBounds, selected, enter]);
 
+  const switchMode = (mode: Mode) => {
+    // Entering the compare view with nothing to compare starts from the selected place.
+    const seed = compared.length === 0 && selected ? [selected] : compared;
+    update({ mode, compare: mode === "compare" ? seed : compared });
+  };
+
   const paint = useMemo(
     () => (data && resolved ? paintFor(data, resolved, palette, level) : null),
     [data, resolved, palette, level],
@@ -180,19 +197,30 @@ export function Explorer() {
 
   return (
     <div className="flex h-dvh flex-col">
-      <header className="flex h-12 shrink-0 items-center justify-between gap-3 border-b bg-background px-4">
-        <h1 className="truncate text-sm font-semibold">
-          Geografía de la dependencia
-        </h1>
+      <SiteHeader current={state.mode} onMode={switchMode}>
         <TerritorySearch
+          collapse
           territories={data.territories}
           onSelect={(id) => {
-            update({ territory: id });
+            update({ territory: id, mode: "explore" });
             enter(id);
           }}
         />
-      </header>
-      <div className="flex min-h-0 flex-1 flex-col md:flex-row">
+      </SiteHeader>
+      {/* The compare view covers the map instead of replacing it, so the map keeps its place. */}
+      <div className="relative flex min-h-0 flex-1 flex-col md:flex-row">
+        {comparing && (
+          <section
+            aria-label="Comparación"
+            className="absolute inset-0 z-20 bg-background"
+          >
+            <CompareView
+              data={data}
+              territories={compared}
+              onChange={(ids) => update({ compare: ids })}
+            />
+          </section>
+        )}
         <main className="relative flex min-h-0 flex-1 flex-col bg-canvas">
           {/* On small screens the controls, map and legend stack; from md up the
               controls and legend float over a full-bleed map. */}
@@ -220,12 +248,23 @@ export function Explorer() {
               <Button
                 variant="secondary"
                 size="sm"
-                className="absolute right-2 bottom-2 z-10 md:right-3 md:bottom-3"
+                className="absolute top-2 right-2 z-10 md:top-3 md:right-3"
                 onClick={() => setFocus({ bounds: MEXICO })}
               >
                 Ver todo el país
               </Button>
             )}
+            {/* Always on screen: the data that cuts against the thesis is not tucked away. */}
+            <Button
+              size="sm"
+              aria-pressed={state.counterargument}
+              className="absolute right-2 bottom-2 z-10 md:right-3 md:bottom-3"
+              onClick={() =>
+                update({ counterargument: !state.counterargument })
+              }
+            >
+              El contraargumento
+            </Button>
           </div>
           <div className="border-t bg-background md:absolute md:bottom-3 md:left-3 md:z-10 md:w-[300px] md:border">
             <Legend
@@ -240,15 +279,33 @@ export function Explorer() {
           </div>
         </main>
         <aside
-          aria-label="Ficha"
+          aria-label={state.counterargument ? "El contraargumento" : "Ficha"}
           className="max-h-[36%] shrink-0 overflow-y-auto border-t bg-background md:max-h-none md:w-[360px] md:border-t-0 md:border-l"
         >
-          <DetailPanel
-            data={data}
-            resolved={resolved}
-            territory={selected}
-            onClose={() => update({ territory: null })}
-          />
+          {state.counterargument ? (
+            <CounterargumentPanel
+              data={data}
+              territory={selected}
+              sector={sector}
+              onClose={() => update({ counterargument: false })}
+            />
+          ) : (
+            <DetailPanel
+              data={data}
+              resolved={resolved}
+              territory={selected}
+              onClose={() => update({ territory: null })}
+              onCompare={
+                selected && !compared.includes(selected)
+                  ? () =>
+                      update({
+                        mode: "compare",
+                        compare: [...compared, selected].slice(-MAX_COMPARED),
+                      })
+                  : undefined
+              }
+            />
+          )}
         </aside>
       </div>
       <TableDialog

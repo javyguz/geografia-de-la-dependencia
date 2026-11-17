@@ -70,3 +70,44 @@ test("search finds municipalities that share a name", async ({ page }) => {
   await page.getByRole("option", { name: "Juárez Chihuahua" }).click();
   await expect(page).toHaveURL(/[?&]t=08037/);
 });
+
+test("the counterargument is one click away and lands in the URL", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "El contraargumento" }).click();
+  await expect(
+    page.getByRole("heading", { name: "El contraargumento", level: 2 }),
+  ).toBeVisible();
+  await expect(
+    page.getByText(/entidades con dato en los dos grupos/).first(),
+  ).toBeVisible();
+  await expect(page).toHaveURL(/[?&]panel=contraargumento/);
+});
+
+test("compare starts from the selected place and adds another", async ({
+  page,
+}) => {
+  await page.goto("/?t=19");
+  await page
+    .getByRole("button", { name: "Comparar", exact: true })
+    .first()
+    .click();
+  await expect(page.getByRole("heading", { name: "Comparar" })).toBeVisible();
+  await page.getByRole("button", { name: "Añadir lugar" }).click();
+  await page.getByPlaceholder("Entidad o municipio").fill("chiapas");
+  await page.getByRole("option", { name: "Chiapas", exact: true }).click();
+  await expect(page).toHaveURL(/[?&]cmp=19,07/);
+  await expect(
+    page.getByRole("columnheader", { name: /Chiapas/ }),
+  ).toBeVisible();
+});
+
+test("the methodology page describes every indicator of the catalog", async ({
+  page,
+}) => {
+  await page.goto("/metodologia");
+  // One entry per indicator of the catalog (20), apart from the sources.
+  await expect(page.locator("article[id]:not([id^=fuente-])")).toHaveCount(20);
+  await expect(page.locator("#labor_share")).toContainText("Fórmula");
+});

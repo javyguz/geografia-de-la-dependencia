@@ -23,9 +23,17 @@ import type { Territory } from "@/lib/types";
 interface Props {
   territories: Map<string, Territory>;
   onSelect: (id: string) => void;
+  label?: string;
+  /** Shows only the icon on phones, where the header has no room for the label. */
+  collapse?: boolean;
 }
 
-export function TerritorySearch({ territories, onSelect }: Props) {
+export function TerritorySearch({
+  territories,
+  onSelect,
+  label = "Buscar lugar",
+  collapse = false,
+}: Props) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const list = useMemo(
@@ -44,10 +52,13 @@ export function TerritorySearch({ territories, onSelect }: Props) {
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          className="w-48 justify-start font-normal text-muted-foreground"
+          aria-label={label}
+          className="justify-start font-normal text-muted-foreground sm:w-48"
         >
           <SearchIcon data-icon="inline-start" />
-          Buscar lugar
+          <span className={collapse ? "max-sm:sr-only" : undefined}>
+            {label}
+          </span>
         </Button>
       </PopoverTrigger>
       <PopoverContent align="end" className="w-72 p-0">
