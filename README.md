@@ -2,6 +2,8 @@
 
 Mapa interactivo de México, a nivel estatal y municipal, que muestra con datos públicos cómo se distribuye en el territorio el peso del capital extranjero, quién se queda con el valor que se produce y si la integración exportadora mejora o no las condiciones de trabajo locales.
 
+**Sitio:** [geografia-de-la-dependencia.vercel.app](https://geografia-de-la-dependencia.vercel.app)
+
 ![El mapa en «¿Quién se queda con el valor?», con los municipios de Nuevo León y su ficha](docs/captura.png)
 
 ## Qué se puede hacer
@@ -71,7 +73,7 @@ El sitio se publica en [Vercel](https://vercel.com) como sitio estático, sin se
 
 1. En Vercel, crea un proyecto e importa este repositorio.
 2. Como *Root Directory* elige `web`. Vercel detecta Next.js, pnpm y Node 24.
-3. Tras el primer despliegue, activa *Web Analytics* en el proyecto. Es la única analítica del sitio: sin cookies y servida desde el propio dominio.
+3. Tras el primer despliegue, activa *Web Analytics* en el proyecto y vuelve a desplegar: hasta entonces su script no existe y la consola lo avisa. Es la única analítica del sitio: sin cookies y servida desde el propio dominio.
 
 Cada push a `main` vuelve a desplegar.
 
