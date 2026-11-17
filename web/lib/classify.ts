@@ -15,15 +15,17 @@ function quantile(sorted: number[], p: number): number {
  * Missing values are not passed in: they never shape the scale. When many values
  * tie (a sector where most entities are at 0 %), several quantiles coincide and
  * the repeated thresholds are dropped, so there are fewer classes rather than
- * empty ones.
+ * empty ones. For the same reason a threshold at the maximum is dropped (many
+ * municipalities at exactly 100 %): no value could fall above it.
  */
 export function quantileBreaks(values: number[], classes: number): number[] {
   if (values.length === 0) return [];
   const sorted = [...values].sort((a, b) => a - b);
+  const highest = sorted[sorted.length - 1] ?? 0;
   const breaks = Array.from({ length: classes - 1 }, (_, i) =>
     quantile(sorted, (i + 1) / classes),
   );
-  return [...new Set(breaks)];
+  return [...new Set(breaks)].filter((b) => b < highest);
 }
 
 /**

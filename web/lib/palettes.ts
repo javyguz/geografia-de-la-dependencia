@@ -13,6 +13,8 @@ export interface Palette {
   selection: string;
   selectionHalo: string;
   border: string;
+  /** State lines drawn over the municipalities. */
+  outline: string;
   canvas: string;
 }
 
@@ -28,6 +30,7 @@ const LIGHT: Palette = {
   selection: "#1a1c1f",
   selectionHalo: "#ffffff",
   border: "#ffffff",
+  outline: "#5c6066",
   canvas: "#eef0f2",
 };
 
@@ -47,6 +50,7 @@ const DARK: Palette = {
   selection: "#eceef0",
   selectionHalo: "#0e0f10",
   border: "#0e0f10",
+  outline: "#a4a9b0",
   canvas: "#0e0f10",
 };
 

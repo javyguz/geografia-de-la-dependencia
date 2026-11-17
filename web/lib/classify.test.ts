@@ -23,6 +23,13 @@ describe("quantileBreaks", () => {
     expect(classIndex(40, breaks)).toBe(breaks.length);
   });
 
+  it("leaves no empty class above the maximum when many values tie at the top", () => {
+    const values = [10, 20, 30, 40, 100, 100, 100, 100, 100, 100];
+    const breaks = quantileBreaks(values, 5);
+    expect(breaks.every((b) => b < 100)).toBe(true);
+    expect(classIndex(100, breaks)).toBe(breaks.length);
+  });
+
   it("ignores input order", () => {
     expect(quantileBreaks([3, 1, 2], 3)).toEqual(quantileBreaks([1, 2, 3], 3));
   });

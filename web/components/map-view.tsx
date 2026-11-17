@@ -4,12 +4,16 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import type { FeatureCollection } from "geojson";
 import * as maplibregl from "maplibre-gl";
 import { useEffect, useRef } from "react";
+import { type Bounds, MEXICO } from "@/lib/bounds";
+import type { Level } from "@/lib/data";
 import type { Palette } from "@/lib/palettes";
 import type { MissingReason } from "@/lib/types";
 
-/** Bounds of Mexico, as [west, south, east, north]. */
-const MEXICO: [number, number, number, number] = [-118.4, 14.5, -86.7, 32.7];
-const SOURCE = "territories";
+const SOURCES: Record<Level, string> = {
+  state: "states",
+  municipality: "municipalities",
+};
+const EMPTY: FeatureCollection = { type: "FeatureCollection", features: [] };
 
 // MapLibre looks for its worker next to its own file, but the bundler renames
 // that file, so the worker is declared here as an asset of the build.
@@ -17,13 +21,23 @@ maplibregl.setWorkerUrl(
   new URL("maplibre-gl/dist/maplibre-gl-worker.mjs", import.meta.url).href,
 );
 
+/** A request to frame some bounds; a new object each time, so the same bounds can be asked twice. */
+export interface FocusRequest {
+  bounds: Bounds;
+}
+
 interface Props {
-  geometry: FeatureCollection;
+  stateGeometry: FeatureCollection;
+  municipalGeometry: FeatureCollection | null;
+  level: Level;
   palette: Palette;
   fills: Map<string, string>;
   missing: Map<string, MissingReason>;
   selected: string | null;
+  focus: FocusRequest | null;
   onSelect: (id: string | null) => void;
+  /** Reports whether the map is close enough to show municipalities. */
+  onZoomedInChange: (zoomedIn: boolean) => void;
 }
 
 /** A square tile of diagonal lines, used to mark territories without a value. */
@@ -71,33 +85,36 @@ function idsFilter(ids: string[]): maplibregl.FilterSpecification {
   return ["in", ["get", "CVEGEO"], ["literal", ids]];
 }
 
-export function MapView({
-  geometry,
-  palette,
-  fills,
-  missing,
-  selected,
-  onSelect,
-}: Props) {
+/** Room the map keeps around what it frames, so the floating controls do not cover it. */
+function padding(): maplibregl.PaddingOptions {
+  // Same breakpoint as the layout in explorer.tsx (Tailwind `md`).
+  return window.matchMedia("(min-width: 768px)").matches
+    ? { top: 150, left: 24, bottom: 24, right: 24 }
+    : { top: 8, left: 8, bottom: 8, right: 8 };
+}
+
+/**
+ * Zoom from which municipalities are drawn: half a step closer than the whole
+ * country. Low enough that the largest states, framed whole, already show them.
+ */
+function municipalZoom(map: maplibregl.Map): number {
+  const whole = map.cameraForBounds(MEXICO, { padding: padding() });
+  return (whole?.zoom ?? 4) + 0.5;
+}
+
+export function MapView(props: Props) {
   const container = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const readyRef = useRef(false);
-  const latest = useRef({
-    geometry,
-    palette,
-    fills,
-    missing,
-    selected,
-    onSelect,
-  });
-  latest.current = { geometry, palette, fills, missing, selected, onSelect };
+  const latest = useRef(props);
+  latest.current = props;
 
   // Paints everything that depends on props. Safe to call any number of times.
   const paint = useRef(() => {});
   paint.current = () => {
     const map = mapRef.current;
     if (!map || !readyRef.current) return;
-    const { palette, fills, missing, selected } = latest.current;
+    const { palette, fills, missing, selected, level } = latest.current;
 
     for (const direction of [45, 135] as const) {
       const name = `hatch-${direction}`;
@@ -105,14 +122,6 @@ export function MapView({
       map.addImage(name, hatch(palette.noData, palette.noDataHatch, direction));
     }
     map.setPaintProperty("background", "background-color", palette.canvas);
-    map.setPaintProperty(
-      "fill",
-      "fill-color",
-      fillExpression(fills, palette.noData),
-    );
-    map.setPaintProperty("borders", "line-color", palette.border);
-    map.setPaintProperty("selection-halo", "line-color", palette.selectionHalo);
-    map.setPaintProperty("selection", "line-color", palette.selection);
 
     const confidential = [...missing]
       .filter(([, r]) => r === "confidential")
@@ -120,23 +129,79 @@ export function MapView({
     const others = [...missing]
       .filter(([, r]) => r !== "confidential")
       .map(([id]) => id);
-    map.setFilter("missing-confidential", idsFilter(confidential));
-    map.setFilter("missing-other", idsFilter(others));
+    for (const each of ["state", "municipality"] as const) {
+      const visibility = each === level ? "visible" : "none";
+      for (const layer of ["fill", "missing-other", "missing-confidential"])
+        map.setLayoutProperty(`${each}-${layer}`, "visibility", visibility);
+    }
+    map.setPaintProperty(
+      `${level}-fill`,
+      "fill-color",
+      fillExpression(fills, palette.noData),
+    );
+    map.setFilter(`${level}-missing-confidential`, idsFilter(confidential));
+    map.setFilter(`${level}-missing-other`, idsFilter(others));
+
+    // Among municipalities, state lines are drawn darker so each state stays readable.
+    const municipal = level === "municipality";
+    map.setLayoutProperty(
+      "municipality-borders",
+      "visibility",
+      municipal ? "visible" : "none",
+    );
+    map.setPaintProperty("municipality-borders", "line-color", palette.border);
+    map.setPaintProperty(
+      "state-borders",
+      "line-color",
+      municipal ? palette.outline : palette.border,
+    );
+    map.setPaintProperty(
+      "state-borders",
+      "line-width",
+      municipal ? 1.25 : 0.75,
+    );
 
     const own: maplibregl.FilterSpecification = [
       "==",
       ["get", "CVEGEO"],
       selected ?? "",
     ];
-    map.setFilter("selection-halo", own);
-    map.setFilter("selection", own);
+    for (const each of ["state", "municipality"] as const) {
+      map.setFilter(`${each}-selection-halo`, own);
+      map.setFilter(`${each}-selection`, own);
+      map.setPaintProperty(
+        `${each}-selection-halo`,
+        "line-color",
+        palette.selectionHalo,
+      );
+      map.setPaintProperty(
+        `${each}-selection`,
+        "line-color",
+        palette.selection,
+      );
+    }
+  };
+
+  const frame = useRef((_: FocusRequest) => {});
+  frame.current = ({ bounds }) => {
+    const map = mapRef.current;
+    if (!map || !readyRef.current) return;
+    const camera = map.cameraForBounds(bounds, { padding: padding() });
+    if (!camera) return;
+    const reduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    // A large state can fit at a zoom below the municipal one; entering it should still show its municipalities.
+    const zoom =
+      bounds === MEXICO
+        ? (camera.zoom ?? 4)
+        : Math.max(camera.zoom ?? 0, municipalZoom(map) + 0.01);
+    map.easeTo({ center: camera.center, zoom, duration: reduced ? 0 : 150 });
   };
 
   useEffect(() => {
     const element = container.current;
     if (!element) return;
-    // Same breakpoint as the layout in explorer.tsx (Tailwind `md`).
-    const wide = window.matchMedia("(min-width: 768px)").matches;
     const map = new maplibregl.Map({
       container: element,
       // No tile basemap: the only thing on screen is the data (brief §1).
@@ -154,83 +219,106 @@ export function MapView({
         ],
       },
       bounds: MEXICO,
-      // On wide screens the controls and the legend float over the map, so it
-      // keeps room above and below; on narrow screens they sit outside it.
-      fitBoundsOptions: {
-        padding: wide
-          ? { top: 150, left: 24, bottom: 24, right: 24 }
-          : { top: 8, left: 8, bottom: 8, right: 8 },
-      },
+      fitBoundsOptions: { padding: padding() },
       attributionControl: false,
       dragRotate: false,
       pitchWithRotate: false,
       maxBounds: [-135, 5, -70, 40],
+      maxZoom: 11,
     });
     map.touchZoomRotate.disableRotation();
     map.keyboard.disableRotation();
     mapRef.current = map;
 
     map.on("load", () => {
-      map.addSource(SOURCE, { type: "geojson", data: latest.current.geometry });
-      map.addLayer({
-        id: "fill",
-        source: SOURCE,
-        type: "fill",
-        paint: { "fill-color": "#d5d6d8" },
+      const { stateGeometry, municipalGeometry } = latest.current;
+      map.addSource(SOURCES.state, { type: "geojson", data: stateGeometry });
+      map.addSource(SOURCES.municipality, {
+        type: "geojson",
+        data: municipalGeometry ?? EMPTY,
       });
+      for (const level of ["state", "municipality"] as const) {
+        const source = SOURCES[level];
+        map.addLayer({
+          id: `${level}-fill`,
+          source,
+          type: "fill",
+          paint: { "fill-color": "#d5d6d8" },
+        });
+        map.addLayer({
+          id: `${level}-missing-other`,
+          source,
+          type: "fill",
+          filter: idsFilter([]),
+          paint: { "fill-pattern": "hatch-45" },
+        });
+        map.addLayer({
+          id: `${level}-missing-confidential`,
+          source,
+          type: "fill",
+          filter: idsFilter([]),
+          paint: { "fill-pattern": "hatch-135" },
+        });
+      }
       map.addLayer({
-        id: "missing-other",
-        source: SOURCE,
-        type: "fill",
-        filter: idsFilter([]),
-        paint: { "fill-pattern": "hatch-45" },
-      });
-      map.addLayer({
-        id: "missing-confidential",
-        source: SOURCE,
-        type: "fill",
-        filter: idsFilter([]),
-        paint: { "fill-pattern": "hatch-135" },
-      });
-      map.addLayer({
-        id: "borders",
-        source: SOURCE,
+        id: "municipality-borders",
+        source: SOURCES.municipality,
         type: "line",
-        paint: { "line-width": 0.75, "line-color": "#ffffff" },
+        paint: { "line-width": 0.4 },
       });
       map.addLayer({
-        id: "selection-halo",
-        source: SOURCE,
+        id: "state-borders",
+        source: SOURCES.state,
         type: "line",
-        filter: ["==", ["get", "CVEGEO"], ""],
-        layout: { "line-join": "round" },
-        paint: { "line-width": 4, "line-color": "#ffffff" },
+        paint: { "line-width": 0.75 },
       });
-      map.addLayer({
-        id: "selection",
-        source: SOURCE,
-        type: "line",
-        filter: ["==", ["get", "CVEGEO"], ""],
-        layout: { "line-join": "round" },
-        paint: { "line-width": 2, "line-color": "#1a1c1f" },
-      });
+      for (const level of ["state", "municipality"] as const) {
+        map.addLayer({
+          id: `${level}-selection-halo`,
+          source: SOURCES[level],
+          type: "line",
+          filter: ["==", ["get", "CVEGEO"], ""],
+          layout: { "line-join": "round" },
+          paint: { "line-width": 4 },
+        });
+        map.addLayer({
+          id: `${level}-selection`,
+          source: SOURCES[level],
+          type: "line",
+          filter: ["==", ["get", "CVEGEO"], ""],
+          layout: { "line-join": "round" },
+          paint: { "line-width": 2 },
+        });
+      }
       readyRef.current = true;
       paint.current();
+      if (latest.current.focus) frame.current(latest.current.focus);
+    });
+
+    let zoomedIn = false;
+    map.on("zoomend", () => {
+      const now = map.getZoom() >= municipalZoom(map);
+      if (now !== zoomedIn) {
+        zoomedIn = now;
+        latest.current.onZoomedInChange(now);
+      }
     });
 
     map.on("click", (event: maplibregl.MapMouseEvent) => {
       const [feature] = map.queryRenderedFeatures(event.point, {
-        layers: ["fill"],
+        layers: [`${latest.current.level}-fill`],
       });
       const id = feature?.properties?.CVEGEO;
       latest.current.onSelect(typeof id === "string" ? id : null);
     });
-    map.on("mousemove", "fill", () => {
-      map.getCanvas().style.cursor = "pointer";
-    });
-    map.on("mouseleave", "fill", () => {
-      map.getCanvas().style.cursor = "";
-    });
+    for (const level of ["state", "municipality"] as const) {
+      map.on("mousemove", `${level}-fill`, () => {
+        map.getCanvas().style.cursor = "pointer";
+      });
+      map.on("mouseleave", `${level}-fill`, () => {
+        map.getCanvas().style.cursor = "";
+      });
+    }
 
     return () => {
       readyRef.current = false;
@@ -239,10 +327,23 @@ export function MapView({
     };
   }, []);
 
+  const { municipalGeometry, palette, fills, missing, selected, level, focus } =
+    props;
+
+  useEffect(() => {
+    const source = mapRef.current?.getSource(SOURCES.municipality);
+    if (municipalGeometry && readyRef.current && source?.type === "geojson")
+      (source as maplibregl.GeoJSONSource).setData(municipalGeometry);
+  }, [municipalGeometry]);
+
   // biome-ignore lint/correctness/useExhaustiveDependencies: repaint whenever any painted input changes
   useEffect(() => {
     paint.current();
-  }, [palette, fills, missing, selected]);
+  }, [palette, fills, missing, selected, level]);
+
+  useEffect(() => {
+    if (focus) frame.current(focus);
+  }, [focus]);
 
   // MapLibre gives its container `position: relative`, which would undo `absolute`,
   // so the container sits inside a wrapper that carries the positioning.
@@ -252,7 +353,7 @@ export function MapView({
         ref={container}
         className="size-full"
         role="img"
-        aria-label="Mapa de México por entidad federativa. Los mismos datos están disponibles como tabla."
+        aria-label={`Mapa de México por ${level === "state" ? "entidad federativa" : "municipio"}. Los mismos datos están disponibles como tabla.`}
       />
     </div>
   );

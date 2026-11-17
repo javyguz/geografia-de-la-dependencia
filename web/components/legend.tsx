@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { classIndex } from "@/lib/classify";
-import type { StateData } from "@/lib/data";
+import type { Data } from "@/lib/data";
 import { formatBare, unitLabel } from "@/lib/format";
 import type { Palette } from "@/lib/palettes";
 import type { Cell } from "@/lib/types";
@@ -16,11 +16,13 @@ import {
 } from "@/lib/view";
 
 interface Props {
-  data: StateData;
+  data: Data;
   resolved: Resolved;
   paint: MapPaint;
   palette: Palette;
   selected: string | null;
+  /** Which level the colours describe, or why it is not the one the reader zoomed to. */
+  scope: string;
   onOpenTable: () => void;
 }
 
@@ -37,7 +39,7 @@ function Sequential({
   paint,
   palette,
   selected,
-}: Omit<Props, "onOpenTable" | "data">) {
+}: Omit<Props, "onOpenTable" | "data" | "scope">) {
   const { indicator } = resolved;
   const values = [...paint.cells.values()].flatMap((c) =>
     c.value === null ? [] : [c.value],
@@ -104,7 +106,7 @@ function Bivariate({
   paint,
   palette,
   selected,
-}: Omit<Props, "onOpenTable" | "data">) {
+}: Omit<Props, "onOpenTable" | "data" | "scope">) {
   const { indicator, indicator2 } = resolved;
   const axisValue = (cells: Map<string, Cell> | null): number | null =>
     (selected ? cells?.get(selected)?.value : null) ?? null;
@@ -155,7 +157,7 @@ function Bivariate({
 }
 
 export function Legend(props: Props) {
-  const { data, resolved, paint, palette, onOpenTable } = props;
+  const { data, resolved, paint, palette, scope, onOpenTable } = props;
   const { indicator, indicator2, layer, year } = resolved;
   const bivariate = isBivariate(layer);
   const axes = indicator2 ? [indicator, indicator2] : [indicator];
@@ -175,6 +177,7 @@ export function Legend(props: Props) {
       {bivariate ? <Bivariate {...props} /> : <Sequential {...props} />}
       <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
+          <span>{scope}</span>
           {unit && <span>{unit}</span>}
           {hasOther && (
             <span className="flex items-center gap-1.5">

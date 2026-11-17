@@ -4,7 +4,16 @@
  */
 
 import { bivariateIndex, classIndex, quantileBreaks, spread } from "./classify";
-import { cellsOf, findSeries, NATIONAL, type StateData } from "./data";
+import {
+  cellsOf,
+  type Data,
+  findSeries,
+  type Level,
+  levelOf,
+  NATIONAL,
+  stateOf,
+  valuesOf,
+} from "./data";
 import { formatValue } from "./format";
 import type { Palette } from "./palettes";
 import { valuesWithoutNational } from "./ranking";
@@ -36,17 +45,14 @@ export interface MapPaint {
   cells2: Map<string, Cell> | null;
 }
 
-export function layerById(data: StateData, id: string): Layer {
+export function layerById(data: Data, id: string): Layer {
   return (
     data.catalog.layers.find((l) => l.id === id) ??
     (data.catalog.layers[0] as Layer)
   );
 }
 
-export function indicatorById(
-  data: StateData,
-  id: string,
-): Indicator | undefined {
+export function indicatorById(data: Data, id: string): Indicator | undefined {
   return data.catalog.indicators.find((i) => i.id === id);
 }
 
@@ -62,7 +68,7 @@ function firstOf(
 }
 
 /** Applies the rules that keep a state valid: the indicator belongs to the layer, the year to the indicator. */
-export function resolve(data: StateData, state: ViewState): Resolved {
+export function resolve(data: Data, state: ViewState): Resolved {
   const layer = layerById(data, state.layer);
   const bivariate = isBivariate(layer);
   const indicatorId = firstOf(
@@ -84,14 +90,26 @@ export function resolve(data: StateData, state: ViewState): Resolved {
   return { layer, indicator, indicator2: second, sector, year };
 }
 
-function cellsFor(
-  data: StateData,
+/** One series as cells, or null while its file has not loaded. A missing series gives no cells. */
+export function cellsFor(
+  data: Data,
+  level: Level,
   indicator: string,
   sector: string,
   year: number,
 ): Map<string, Cell> | null {
-  const series = findSeries(data.values, indicator, sector, year);
-  return series ? cellsOf(data.values, series) : null;
+  const file = valuesOf(data, level, sector);
+  if (!file) return null;
+  const series = findSeries(file, indicator, sector, year);
+  return series ? cellsOf(file, series) : new Map();
+}
+
+/** Whether the map can go down to municipalities for what is on screen. */
+export function hasMunicipalities(resolved: Resolved): boolean {
+  return (
+    !isBivariate(resolved.layer) &&
+    resolved.indicator.levels.includes("municipality")
+  );
 }
 
 /** Palette position of a cell of the bivariate map, or null when either axis has no value. */
@@ -122,20 +140,24 @@ export function sequentialColor(
   );
 }
 
+/** Colours of every territory of `level`. The level's files must have loaded. */
 export function paintFor(
-  data: StateData,
+  data: Data,
   resolved: Resolved,
   palette: Palette,
+  level: Level,
 ): MapPaint {
   const { indicator, indicator2, sector, year } = resolved;
   const cells =
-    cellsFor(data, indicator.id, sector, year) ?? new Map<string, Cell>();
+    cellsFor(data, level, indicator.id, sector, year) ??
+    new Map<string, Cell>();
   const fills = new Map<string, string>();
   const missing = new Map<string, MissingReason>();
 
   if (indicator2) {
     const cells2 =
-      cellsFor(data, indicator2.id, "total", year) ?? new Map<string, Cell>();
+      cellsFor(data, level, indicator2.id, "total", year) ??
+      new Map<string, Cell>();
     const breaks = quantileBreaks(
       valuesWithoutNational(cells),
       BIVARIATE_CLASSES,
@@ -175,24 +197,45 @@ export function paintFor(
   return { fills, missing, breaks, breaks2: [], cells, cells2: null };
 }
 
-/** What the indicator shows for a territory, using the sector and year of the map when it has them. */
-export function valueFor(
-  data: StateData,
+export interface Reading {
+  /** The territory the value belongs to: the one asked for, or its state. */
+  territory: string;
+  /** True when the indicator is not published for municipalities and the state stands in. */
+  fromState: boolean;
+  year: number;
+  sector: string;
+  /** Every territory of that level for the same series; null while it loads. */
+  cells: Map<string, Cell> | null;
+}
+
+/**
+ * Where to read an indicator for a territory, using the sector and year of the map
+ * when the indicator has them. An indicator published only for states is read from
+ * the municipality's state, and the reading says so.
+ */
+export function readingFor(
+  data: Data,
   indicator: Indicator,
   sector: string,
   year: number,
   territory: string,
-): { cell: Cell; year: number } | null {
+): Reading {
   const shownYear = indicator.years.includes(year)
     ? year
     : Math.max(...indicator.years);
   const shownSector = indicator.by_sector ? sector : "total";
-  const series = findSeries(data.values, indicator.id, shownSector, shownYear);
-  const cell = series ? cellsOf(data.values, series).get(territory) : undefined;
-  return cell ? { cell, year: shownYear } : null;
+  const fromState = !indicator.levels.includes(levelOf(territory));
+  const own = fromState ? stateOf(territory) : territory;
+  return {
+    territory: own,
+    fromState,
+    year: shownYear,
+    sector: shownSector,
+    cells: cellsFor(data, levelOf(own), indicator.id, shownSector, shownYear),
+  };
 }
 
-export function reasonLabel(data: StateData, reason: MissingReason): string {
+export function reasonLabel(data: Data, reason: MissingReason): string {
   return (
     data.catalog.missing_reasons.find((r) => r.id === reason)?.label ??
     "Sin dato"
@@ -200,11 +243,7 @@ export function reasonLabel(data: StateData, reason: MissingReason): string {
 }
 
 /** The text that stands for a cell: the formatted value, or the reason it is missing. */
-export function cellText(
-  data: StateData,
-  cell: Cell,
-  indicator: Indicator,
-): string {
+export function cellText(data: Data, cell: Cell, indicator: Indicator): string {
   return cell.value === null
     ? reasonLabel(data, cell.reason)
     : formatValue(cell.value, indicator.unit, indicator.decimals);
@@ -215,7 +254,7 @@ export function cellText(
  * A source that describes other years than the one on screen is left out.
  */
 export function sourcesOf(
-  data: StateData,
+  data: Data,
   indicators: Indicator[],
   year: number,
 ): Source[] {
@@ -228,7 +267,7 @@ export function sourcesOf(
 
 /** "INEGI, Censos Económicos 2024; …" as plain text for the legend. */
 export function sourceLine(
-  data: StateData,
+  data: Data,
   indicators: Indicator[],
   year: number,
 ): string {

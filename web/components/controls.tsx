@@ -8,8 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { StateData } from "@/lib/data";
-import { sectorsWithData } from "@/lib/data";
+import { type Data, sectorsWithData } from "@/lib/data";
 import type { ViewState } from "@/lib/url-state";
 import { indicatorById, isBivariate, type Resolved } from "@/lib/view";
 
@@ -52,7 +51,7 @@ function Pick({
 }
 
 interface Props {
-  data: StateData;
+  data: Data;
   resolved: Resolved;
   onChange: (patch: Partial<ViewState>) => void;
 }
@@ -72,7 +71,7 @@ export function Controls({ data, resolved, onChange }: Props) {
   }));
   const sectors = sectorsWithData(
     data.catalog,
-    data.values,
+    data.states,
     indicator.id,
     year,
   ).map((s) => ({
