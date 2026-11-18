@@ -261,9 +261,9 @@ Las herramientas son funciones puras sobre los datos cargados. Las que necesitan
 
 ### Idea
 
-Una hoja cartográfica, no un tablero. El mapa es la página y la interfaz es su margen: una barra, una leyenda y una ficha, en gris y blanco, sin sombras ni tarjetas.
+Una hoja cartográfica con tono editorial, no un tablero. El mapa es la página y la interfaz es su margen: una barra, una leyenda y una ficha, en blanco, negro y grises neutros, sin sombras. Los títulos van en serif y todo lo demás en una grotesca, como en una publicación de análisis.
 
-**Tres paletas, dos tintas.** Todo el color de la app sale de dos tonos: añil, el azul violáceo del tinte mesoamericano, y ocre. La paleta secuencial es añil; la divergente va de añil a ocre pasando por gris; la bivariada cruza las dos. El único acento de la interfaz es el añil más oscuro. Así el lector aprende un solo código de color.
+**Tres paletas, dos tintas.** Todo el color de la app sale de dos tonos: añil, el azul violáceo del tinte mesoamericano, y ocre. La paleta secuencial es añil; la divergente va de añil a ocre pasando por gris; la bivariada cruza las dos. La interfaz no tiene color propio: los botones son de tinta (negro en claro, blanco en oscuro) y el añil oscuro queda solo para enlaces y foco. Así el lector aprende un solo código de color.
 
 Dos razones para elegir estos tonos:
 
@@ -276,15 +276,16 @@ Dos razones para elegir estos tonos:
 
 | Token | Claro | Oscuro | Uso |
 |---|---|---|---|
-| `surface` | `#ffffff` | `#161718` | Barra, leyenda, ficha |
-| `canvas` | `#eef0f2` | `#0e0f10` | Fondo del mapa |
-| `panel` | `#f4f5f6` | `#1f2123` | Filas alternas, campos |
-| `border` | `#d9dcdf` | `#34373a` | Líneas de 1 px |
-| `text` | `#1a1c1f` | `#eceef0` | Texto y cifras |
-| `text-muted` | `#5c6066` | `#a4a9b0` | Unidades, fuentes, notas |
-| `accent` | `#3a47a8` | `#a2b4f5` | Enlaces, foco, modo activo |
+| `surface` | `#ffffff` | `#0a0a0a` | Barra, leyenda, ficha |
+| `canvas` | `#f2f2f2` | `#000000` | Fondo del mapa |
+| `panel` | `#f5f5f5` | `#171717` | Filas alternas, campos |
+| `pill` | `#e7e7e7` | `#262626` | Fondo de la navegación en píldoras |
+| `border` | `#d9d9d9` | `#2e2e2e` | Líneas de 1 px |
+| `text` | `#0a0a0a` | `#f0f0f0` | Texto, cifras y botones principales |
+| `text-muted` | `#666666` | `#a3a3a3` | Unidades, fuentes, notas |
+| `link` | `#3a47a8` | `#a2b4f5` | Enlaces y foco |
 
-Contrastes medidos: texto 17.1:1, texto atenuado 6.3:1 y acento 7.9:1 sobre blanco; en oscuro, 15.4:1, 7.6:1 y 8.9:1.
+Contrastes medidos: texto 19.8:1, texto atenuado 5.7:1 y enlace 7.9:1 sobre blanco; en oscuro, 17.4:1, 7.8:1 y 9.8:1. Los grises no llevan tinte.
 
 **Datos**
 
@@ -292,7 +293,7 @@ Contrastes medidos: texto 17.1:1, texto atenuado 6.3:1 y acento 7.9:1 sobre blan
 |---|---|
 | Secuencial (5 clases) | `#d3ddfd` `#a2b4f5` `#6d83e6` `#4657bd` `#283380` |
 | Divergente (5 clases) | `#4657bd` `#a2b4f5` `#e6e6e4` `#e1ab7b` `#8f5208` |
-| Sin dato | `#d5d6d8` con trama a 45° en `#a9acb0` |
+| Sin dato | `#d6d6d6` con trama a 45° en `#aaaaaa` |
 | Confidencial | El mismo gris con trama a 135° |
 
 Bivariada 3×3. Las columnas son la integración externa y las filas las condiciones de trabajo, ambas de baja a alta:
@@ -317,14 +318,18 @@ En el tema oscuro la secuencial se invierte (lo más alto es lo más claro) y el
 
 ### Tipografía
 
-Una sola familia: **Archivo**, de la fundición argentina Omnibus-Type. Es una grotesca pensada para titulares y datos, cubre el español completo y tiene cifras tabulares (comprobado en el archivo de la fuente). Se autoaloja; el navegador no pide nada a terceros.
+Dos familias, ambas autoalojadas; el navegador no pide nada a terceros.
+
+- **Newsreader** (Production Type, licencia OFL), una serif editorial con eje de tamaño óptico, para los títulos (`h1` y `h2`) en peso normal. Da el tono de publicación de análisis sin competir con el mapa.
+- **Archivo**, de la fundición argentina Omnibus-Type, para todo lo demás. Es una grotesca pensada para datos, cubre el español completo y tiene cifras tabulares (comprobado en el archivo de la fuente). Las cifras nunca van en serif.
 
 | Token | Tamaño / interlínea | Peso | Uso |
 |---|---|---|---|
 | `text-xs` | 12 / 16 | 400 | Fuentes, notas, ejes de las gráficas |
 | `text-sm` | 14 / 20 | 400 y 500 | Interfaz, leyenda, tablas |
 | `text-base` | 16 / 24 | 400 | Párrafos del recorrido y de metodología |
-| `text-xl` | 28 / 32 | 600 | El valor de la ficha y los títulos de página |
+| `text-xl` | 20 / 28 | 600 | El valor de la ficha (Archivo) y el nombre del sitio (Newsreader, 400) |
+| `text-2xl` … `text-5xl` | 24 a 48 | 400 | Títulos en Newsreader: ficha y paneles 24, secciones 30, páginas 36 a 48 |
 
 Las cifras de tablas, fichas y leyendas usan `tabular-nums`. No hay mayúsculas sostenidas ni cursivas decorativas.
 
@@ -333,10 +338,10 @@ Las cifras de tablas, fichas y leyendas usan `tabular-nums`. No hay mayúsculas 
 | Token | Valor |
 |---|---|
 | Espaciado | Múltiplos de 4 px: 4, 8, 12, 16, 24, 32 |
-| Radio | 2 px en controles y paneles; 0 en el mapa y la leyenda |
+| Radio | 6 px en controles, 8 px en paneles flotantes, píldora completa en la navegación; 0 en el mapa |
 | Borde | 1 px en `border`; sin sombras |
 | Ancho de la ficha | 360 px en escritorio; hoja inferior en móvil |
-| Altura de la barra | 48 px |
+| Altura de la barra | 56 px |
 | Movimiento | 150 ms, solo al abrir la ficha, cambiar de capa y volar a un territorio; se anula con `prefers-reduced-motion` |
 
 ### Estructura

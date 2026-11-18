@@ -133,3 +133,11 @@ Decisiones de detalle tomadas durante el desarrollo, con su motivo. Las decision
 | La clave y el modelo del asistente se leen de `localStorage` después de montar. | La página se renderiza en el build, donde no hay almacenamiento; leerlos al inicializar daba un HTML distinto del primer render del cliente. |
 | El descargador comprueba que cada archivo llegue completo (`Content-Length`) y reintenta hasta tres veces; una descarga incompleta da su propio error, distinto del de «la fuente cambió». | La primera ejecución de **Rebuild data** falló con el Marco Geoestadístico: su huella no coincidía, pero el archivo publicado conserva el mismo tamaño (284,338,384 bytes) y la misma fecha (diciembre de 2024). Lo probable es una descarga cortada, que el descargador guardaba sin avisar y luego llamaba «versión nueva». |
 
+## Rediseño visual
+
+| Decisión | Motivo |
+|---|---|
+| Títulos en serif (Newsreader), grises neutros, botones de tinta, navegación en píldoras y paneles con radio de 8 px, tomando como referencia artificialanalysis.ai. | Petición del usuario. Se conserva lo que sostiene los valores del proyecto: sin sombras, una sola tinta en la interfaz y el color reservado para los datos. |
+| Newsreader en vez de Victor Serif, y Archivo en vez de Suisse Intl. | Las de la referencia son de pago. Newsreader es OFL y se instala con `@fontsource-variable/newsreader`; Archivo ya tenía comprobadas las cifras tabulares. |
+| No se copia el morado de acento de la referencia; el añil sigue para enlaces y foco. | Ese morado se lee como guinda, el color que la especificación evita por su carga partidista. |
+| Las paletas de datos no cambian; solo los grises de interfaz del mapa (fondo, bordes, sin dato). | Sus comprobaciones de contraste y daltonismo siguen valiendo: el fondo oscuro pasa de `#0e0f10` a negro, lo que solo aumenta el contraste de cada clase. |
