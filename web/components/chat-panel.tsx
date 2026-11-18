@@ -180,7 +180,7 @@ export function ChatPanel({ host, onScreen, onClose }: Props) {
       <div className="flex flex-col gap-3 border-b p-4">
         <div className="flex items-start justify-between gap-2">
           <div>
-            <h2 className="text-base font-semibold">Preguntar a los datos</h2>
+            <h2 className="text-2xl">Preguntar a los datos</h2>
             <p className="text-xs text-muted-foreground">
               Responde solo con las cifras del mapa y cita su fuente.
             </p>

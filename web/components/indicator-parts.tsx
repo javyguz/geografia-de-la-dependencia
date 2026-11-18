@@ -150,7 +150,7 @@ export function Method({
         </ul>
         <a
           href={`/metodologia#${indicator.id}`}
-          className="text-primary underline underline-offset-2"
+          className="text-link underline underline-offset-2"
         >
           Ver en la metodología
         </a>
@@ -178,7 +178,7 @@ export function Sources({
             href={source.url}
             target="_blank"
             rel="noreferrer"
-            className="text-primary underline underline-offset-2"
+            className="text-link underline underline-offset-2"
           >
             {source.institution}, {source.name}
           </a>

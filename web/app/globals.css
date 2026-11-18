@@ -7,7 +7,9 @@
 
 @theme inline {
   --font-sans: "Archivo Variable", system-ui, sans-serif;
-  --font-heading: var(--font-sans);
+  /* Serif for titles and the sans for everything else, as in an editorial page. */
+  --font-heading: "Newsreader Variable", Georgia, serif;
+  --color-link: var(--link);
   --color-canvas: var(--canvas);
   --color-ring: var(--ring);
   --color-input: var(--input);
@@ -27,62 +29,65 @@
   --color-card: var(--card);
   --color-foreground: var(--foreground);
   --color-background: var(--background);
-  /* 2 px on controls and panels everywhere (docs/spec.md §5). */
-  --radius-sm: 2px;
-  --radius-md: 2px;
-  --radius-lg: 2px;
-  --radius-xl: 2px;
-  --radius-2xl: 2px;
-  --radius-3xl: 2px;
-  --radius-4xl: 2px;
+  /* Controls 6 px, panels 8 px; segmented controls use rounded-full (docs/spec.md §5). */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 6px;
+  --radius-xl: 8px;
+  --radius-2xl: 8px;
+  --radius-3xl: 8px;
+  --radius-4xl: 8px;
 }
 
-/* Tokens from docs/spec.md §5. "accent" in the spec is the blue; shadcn's own
-   `accent` is only the hover background, so it takes the `panel` colour. */
+/* Tokens from docs/spec.md §5. Neutral greys with no tint; buttons are ink (black in
+   light, white in dark) and the indigo is kept for links and focus. shadcn's `accent`
+   is only the hover background, so it takes the `panel` colour. */
 :root {
   --background: #ffffff;
-  --canvas: #eef0f2;
-  --foreground: #1a1c1f;
+  --canvas: #f2f2f2;
+  --foreground: #0a0a0a;
   --card: #ffffff;
-  --card-foreground: #1a1c1f;
+  --card-foreground: #0a0a0a;
   --popover: #ffffff;
-  --popover-foreground: #1a1c1f;
-  --primary: #3a47a8;
+  --popover-foreground: #0a0a0a;
+  --primary: #0a0a0a;
   --primary-foreground: #ffffff;
-  --secondary: #f4f5f6;
-  --secondary-foreground: #1a1c1f;
-  --muted: #f4f5f6;
-  --muted-foreground: #5c6066;
-  --accent: #f4f5f6;
-  --accent-foreground: #1a1c1f;
+  --secondary: #e7e7e7;
+  --secondary-foreground: #0a0a0a;
+  --muted: #f5f5f5;
+  --muted-foreground: #666666;
+  --accent: #f5f5f5;
+  --accent-foreground: #0a0a0a;
   --destructive: #b3261e;
-  --border: #d9dcdf;
-  --input: #d9dcdf;
+  --border: #d9d9d9;
+  --input: #d9d9d9;
   --ring: #3a47a8;
-  --radius: 2px;
+  --link: #3a47a8;
+  --radius: 6px;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #161718;
-    --canvas: #0e0f10;
-    --foreground: #eceef0;
-    --card: #161718;
-    --card-foreground: #eceef0;
-    --popover: #1f2123;
-    --popover-foreground: #eceef0;
-    --primary: #a2b4f5;
-    --primary-foreground: #161718;
-    --secondary: #1f2123;
-    --secondary-foreground: #eceef0;
-    --muted: #1f2123;
-    --muted-foreground: #a4a9b0;
-    --accent: #1f2123;
-    --accent-foreground: #eceef0;
+    --background: #0a0a0a;
+    --canvas: #000000;
+    --foreground: #f0f0f0;
+    --card: #0a0a0a;
+    --card-foreground: #f0f0f0;
+    --popover: #171717;
+    --popover-foreground: #f0f0f0;
+    --primary: #f0f0f0;
+    --primary-foreground: #0a0a0a;
+    --secondary: #262626;
+    --secondary-foreground: #f0f0f0;
+    --muted: #171717;
+    --muted-foreground: #a3a3a3;
+    --accent: #171717;
+    --accent-foreground: #f0f0f0;
     --destructive: #f2b8b5;
-    --border: #34373a;
-    --input: #34373a;
+    --border: #2e2e2e;
+    --input: #2e2e2e;
     --ring: #a2b4f5;
+    --link: #a2b4f5;
   }
 }
 
@@ -92,6 +97,10 @@
   }
   html {
     @apply font-sans;
+  }
+  h1,
+  h2 {
+    @apply font-heading font-normal tracking-tight;
   }
   body {
     @apply bg-background text-foreground;

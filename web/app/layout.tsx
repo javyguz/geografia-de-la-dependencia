@@ -2,6 +2,7 @@ import { Analytics } from "@vercel/analytics/next";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import "@fontsource-variable/archivo";
+import "@fontsource-variable/newsreader/opsz.css";
 import "./globals.css";
 
 export const metadata: Metadata = {

@@ -25,13 +25,13 @@ const LIGHT: Palette = {
     ["#fcb17e", "#ae8888", "#4b3f76"],
     ["#da720d", "#96570f", "#40260b"],
   ],
-  noData: "#d5d6d8",
-  noDataHatch: "#a9acb0",
-  selection: "#1a1c1f",
+  noData: "#d6d6d6",
+  noDataHatch: "#aaaaaa",
+  selection: "#0a0a0a",
   selectionHalo: "#ffffff",
   border: "#ffffff",
-  outline: "#5c6066",
-  canvas: "#eef0f2",
+  outline: "#666666",
+  canvas: "#f2f2f2",
 };
 
 // In the dark theme the scales are reversed so that "more" is lighter. The bivariate
@@ -45,13 +45,13 @@ const DARK: Palette = {
     ["#aa6532", "#b38d8d", "#cdc3ff"],
     ["#e1791c", "#e9a466", "#ffddbf"],
   ],
-  noData: "#2b2d30",
-  noDataHatch: "#4a4d51",
-  selection: "#eceef0",
-  selectionHalo: "#0e0f10",
-  border: "#0e0f10",
-  outline: "#a4a9b0",
-  canvas: "#0e0f10",
+  noData: "#2b2b2b",
+  noDataHatch: "#4a4a4a",
+  selection: "#f0f0f0",
+  selectionHalo: "#000000",
+  border: "#000000",
+  outline: "#a3a3a3",
+  canvas: "#000000",
 };
 
 export function paletteFor(theme: Theme): Palette {

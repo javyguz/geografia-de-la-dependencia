@@ -79,7 +79,7 @@ export function ApiKeyDialog({ open, onOpenChange, onSave }: Props) {
                   href="https://openrouter.ai/keys"
                   target="_blank"
                   rel="noreferrer"
-                  className="text-primary underline underline-offset-2"
+                  className="text-link underline underline-offset-2"
                 >
                   openrouter.ai/keys
                 </a>

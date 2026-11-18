@@ -68,7 +68,7 @@ function IndicatorEntry({ indicator }: { indicator: Indicator }) {
                 {i > 0 && "; "}
                 <a
                   href={`#fuente-${id}`}
-                  className="text-primary underline underline-offset-2"
+                  className="text-link underline underline-offset-2"
                 >
                   {source ? `${source.institution}, ${source.name}` : id}
                 </a>
@@ -113,7 +113,7 @@ function Group({ title, description, fresh, repeated }: GroupContent) {
   return (
     <section className="flex flex-col gap-6 border-t pt-8">
       <div className="flex flex-col gap-2">
-        <h2 className="text-xl font-semibold">{title}</h2>
+        <h2 className="text-3xl">{title}</h2>
         <p className="text-muted-foreground">{description}</p>
         {repeated.length > 0 && (
           <p className="text-sm text-muted-foreground">
@@ -123,7 +123,7 @@ function Group({ title, description, fresh, repeated }: GroupContent) {
                 {i > 0 && "; "}
                 <a
                   href={`#${indicator.id}`}
-                  className="text-primary underline underline-offset-2"
+                  className="text-link underline underline-offset-2"
                 >
                   {indicator.name}
                 </a>
@@ -167,7 +167,7 @@ export default function MethodologyPage() {
       <SiteHeader current="methodology" />
       <main className="mx-auto flex w-full max-w-3xl flex-col gap-10 px-4 py-8 text-base md:py-12">
         <section className="flex flex-col gap-4">
-          <h2 className="text-xl font-semibold">Metodología</h2>
+          <h2 className="text-5xl">Metodología</h2>
           <p>
             Todas las cifras del mapa salen de fuentes públicas oficiales,
             listadas al final de esta página. Un solo comando descarga los
@@ -176,7 +176,7 @@ export default function MethodologyPage() {
             en{" "}
             <a
               href={REPOSITORY}
-              className="text-primary underline underline-offset-2"
+              className="text-link underline underline-offset-2"
             >
               GitHub
             </a>
@@ -189,7 +189,7 @@ export default function MethodologyPage() {
         </section>
 
         <section className="flex flex-col gap-4 border-t pt-8">
-          <h2 className="text-xl font-semibold">Cómo se colorea el mapa</h2>
+          <h2 className="text-3xl">Cómo se colorea el mapa</h2>
           <p>
             Cada mapa reparte los territorios con dato en cinco clases de igual
             tamaño (quintiles), calculadas sobre todos los territorios del nivel
@@ -208,7 +208,7 @@ export default function MethodologyPage() {
         </section>
 
         <section className="flex flex-col gap-4 border-t pt-8">
-          <h2 className="text-xl font-semibold">Valores que faltan</h2>
+          <h2 className="text-3xl">Valores que faltan</h2>
           <p>
             Ningún valor se estima, se rellena con cero ni se interpola. Cuando
             falta, el mapa lo marca con una trama y dice por qué:
@@ -227,7 +227,7 @@ export default function MethodologyPage() {
         ))}
 
         <section className="flex flex-col gap-6 border-t pt-8">
-          <h2 className="text-xl font-semibold">Fuentes</h2>
+          <h2 className="text-3xl">Fuentes</h2>
           {catalog.sources.map((source) => (
             <article
               key={source.id}
@@ -237,7 +237,7 @@ export default function MethodologyPage() {
               <h3 className="text-base font-semibold">
                 <a
                   href={source.url}
-                  className="text-primary underline underline-offset-2"
+                  className="text-link underline underline-offset-2"
                 >
                   {source.institution}, {source.name}
                 </a>

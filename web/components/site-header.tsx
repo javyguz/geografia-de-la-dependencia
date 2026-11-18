@@ -39,33 +39,39 @@ export function SiteHeader({ current, onMode, children }: Props) {
     onMode !== undefined && page !== "methodology";
 
   return (
-    <header className="flex h-12 shrink-0 items-center gap-3 border-b bg-background px-4">
-      <h1 className="min-w-0 flex-1 truncate text-sm font-semibold md:flex-none">
+    <header className="flex h-14 shrink-0 items-center gap-3 border-b bg-background px-4">
+      <h1 className="min-w-0 flex-1 truncate text-lg leading-none md:flex-none md:text-xl">
         <a href="/">Geografía de la dependencia</a>
       </h1>
-      <nav aria-label="Secciones" className="hidden flex-1 gap-1 md:flex">
-        {ITEMS.map((item) => {
-          const active = item.page === current;
-          const shared = {
-            variant: active ? ("secondary" as const) : ("ghost" as const),
-            size: "sm" as const,
-            "aria-current": active ? ("page" as const) : undefined,
-          };
-          return inPlace(item.page) ? (
-            <Button
-              key={item.page}
-              {...shared}
-              onClick={() => onMode?.(item.page as Mode)}
-            >
-              {item.label}
-            </Button>
-          ) : (
-            <Button key={item.page} {...shared} asChild>
-              <a href={item.href}>{item.label}</a>
-            </Button>
-          );
-        })}
-      </nav>
+      <div className="hidden flex-1 md:block">
+        <nav
+          aria-label="Secciones"
+          className="flex w-fit gap-0.5 rounded-full bg-secondary p-1"
+        >
+          {ITEMS.map((item) => {
+            const active = item.page === current;
+            const shared = {
+              variant: active ? ("default" as const) : ("ghost" as const),
+              size: "sm" as const,
+              className: `rounded-full px-3 ${active ? "" : "hover:bg-background/70"}`,
+              "aria-current": active ? ("page" as const) : undefined,
+            };
+            return inPlace(item.page) ? (
+              <Button
+                key={item.page}
+                {...shared}
+                onClick={() => onMode?.(item.page as Mode)}
+              >
+                {item.label}
+              </Button>
+            ) : (
+              <Button key={item.page} {...shared} asChild>
+                <a href={item.href}>{item.label}</a>
+              </Button>
+            );
+          })}
+        </nav>
+      </div>
       {children}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

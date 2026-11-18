@@ -40,7 +40,7 @@ export function TourPanel({
           <p className="text-xs text-muted-foreground">
             Recorrido, paso {index + 1} de {STEPS.length}
           </p>
-          <h2 className="text-base font-semibold">{current.title}</h2>
+          <h2 className="text-2xl">{current.title}</h2>
           {current.draft && (
             <Badge variant="outline" className="w-fit">
               Texto provisional

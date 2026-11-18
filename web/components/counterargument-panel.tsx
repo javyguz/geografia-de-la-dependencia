@@ -105,7 +105,7 @@ export function CounterargumentPanel({
     <div className="flex flex-col gap-4 p-4">
       <div className="flex items-start justify-between gap-2">
         <div>
-          <h2 className="text-base font-semibold">{counterargument.title}</h2>
+          <h2 className="text-2xl">{counterargument.title}</h2>
           <p className="text-xs text-muted-foreground">
             {pairPlace === NATIONAL ? "Nacional" : nameOf(data, pairPlace)}.{" "}
             {YEAR}. {sectorName(data, sector)}

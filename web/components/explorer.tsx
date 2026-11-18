@@ -328,7 +328,7 @@ export function Explorer({ initial }: { initial: Initial }) {
         >
           {/* On small screens the controls, map and legend stack; from md up the
               controls and legend float over a full-bleed map. */}
-          <div className="border-b bg-background p-2 md:absolute md:top-3 md:left-3 md:z-10 md:w-[420px] md:border md:p-3">
+          <div className="border-b bg-background p-2 md:absolute md:top-3 md:left-3 md:z-10 md:w-[420px] md:rounded-xl md:border md:p-3">
             <Controls data={data} resolved={resolved} onChange={update} />
           </div>
           <div className="relative min-h-40 flex-1 md:absolute md:inset-0 md:min-h-0">
@@ -379,7 +379,7 @@ export function Explorer({ initial }: { initial: Initial }) {
               El contraargumento
             </Button>
           </div>
-          <div className="border-t bg-background md:absolute md:bottom-3 md:left-3 md:z-10 md:w-[300px] md:border">
+          <div className="border-t bg-background md:absolute md:bottom-3 md:left-3 md:z-10 md:w-[300px] md:overflow-hidden md:rounded-xl md:border">
             <Legend
               data={data}
               resolved={resolved}

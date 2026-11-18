@@ -243,7 +243,7 @@ export function MapView(props: Props) {
           id: `${level}-fill`,
           source,
           type: "fill",
-          paint: { "fill-color": "#d5d6d8" },
+          paint: { "fill-color": "#d6d6d6" },
         });
         map.addLayer({
           id: `${level}-missing-other`,

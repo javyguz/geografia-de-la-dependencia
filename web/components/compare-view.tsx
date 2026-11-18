@@ -64,7 +64,7 @@ export function CompareView({ data, territories, onChange }: Props) {
     <div className="flex h-full flex-col gap-4 overflow-y-auto p-4 md:p-6">
       <div className="flex flex-col gap-3">
         <div>
-          <h2 className="text-xl font-semibold">Comparar</h2>
+          <h2 className="text-4xl">Comparar</h2>
           <p className="text-sm text-muted-foreground">
             Hasta {MAX_COMPARED} lugares en todos los indicadores, en su año más
             reciente y para todos los sectores. Un indicador que no se publica
